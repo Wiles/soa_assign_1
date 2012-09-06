@@ -29,12 +29,11 @@
 		- contains the "soa.msgListener.properties" file which specifies some run-time parameters
 		  for the SOA-Registry
 	c. database sub-directory
-		- contains the actual SOA-Registry database files (Microsoft SQL Express 2008)
+		- contains the actual SOA-Registry database files (Microsoft SQL Server 2008)
 		  - these are the SOA-Registry.MDF and SOA-Registry_Log.LDF files
 		- contains 2 ZIP files
-		  - SQLExpress-DBase.zip - contains the SQL Express version of the SOA-Registry databases (already 
-		                           in the database directory
-		  - SQL2008-DBase.zip - contains the same databases, but in Microsoft SQL 2008 format (ie. not Express)
+		  - SQLExpress-DBase.zip - contains the SQL Express version of the SOA-Registry databases
+		  - SQL2008-DBase.zip - contains the same databases, but in Microsoft SQL 2008 format (the are already in the directory)
 		- contains SQL scripts (scripts\attachSOARegister.sql and scripts\detachSOARegister.sql)
 		  - these script files are used to attach and detach the database from the local SQL2008 instance
 		  - please note that the file location hardcoded in the attachSOARegister.sql script may need to
