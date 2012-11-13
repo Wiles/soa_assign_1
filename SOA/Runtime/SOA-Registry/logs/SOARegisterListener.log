@@ -1,0 +1,48 @@
+2012-11-13 16:41:08 SOASocketListener : Rolling Over LISTENER Log
+2012-11-13 16:41:08 SOASocketListener : Log File Rename Failed
+2012-11-13 16:41:08 -----------------------------------------------
+2012-11-13 16:41:08    SOA Register Online ... 2012-11-13 
+2012-11-13 16:41:08 -----------------------------------------------
+2012-11-13 16:41:08   >>> SOARegisterListener Active - Listening for messages from Thortons-SOA on Socket:3128
+2012-11-13 16:42:06 startListen :       >> Rx/Tx Streams OPEN - (notDone=true)
+2012-11-13 16:42:06 startListen :         >> Spooling Incoming Message
+2012-11-13 16:42:06 startListen :           >> Appending MsgSegment : (11,68,82,67 ... 56,48,124)
+2012-11-13 16:42:06 startListen :           >> Appending Next MsgSegment : (83,82 ... 124,124)
+2012-11-13 16:42:06 startListen :           >> Appending Next MsgSegment : (65,82 ... 121,124)
+2012-11-13 16:42:06 startListen :           >> Appending Next MsgSegment : (82,83 ... 124,124)
+2012-11-13 16:42:06 startListen :           >> Appending Next MsgSegment : (77,67 ... 48,124)
+2012-11-13 16:42:06 startListen :           >> Appending Last MsgSegment : length =1
+2012-11-13 16:42:06 startListen :           >> Appending Last MsgSegment : (28)
+2012-11-13 16:42:06 startListen :         >> Processing Data
+2012-11-13 16:42:06 processMessage :           >> Processing Incoming Message
+2012-11-13 16:42:06 processMessage :              >> Opening DBase ...
+2012-11-13 16:42:07 processMessage :               >> Parsed out segment (DRC|PUB-SERVICE|Blotto|1180|)
+2012-11-13 16:42:07 parseSegment :             >> Begin Parsing
+2012-11-13 16:42:07 parseSegment :             >> Parsing Segment <DRC|>
+2012-11-13 16:42:07 parseSegment :             	>> Found DRC Directive, parsed SOA Command <PUB-SERVICE>
+2012-11-13 16:42:07 processMessage :               >> Parsed out segment (SRV|CAR-LOAN|myCarLoanService|3|1|1||)
+2012-11-13 16:42:07 parseSegment :             >> Begin Parsing
+2012-11-13 16:42:07 processMessage :               >> Parsed out segment (ARG|1|principal|double|mandatory|)
+2012-11-13 16:42:07 parseSegment :             >> Begin Parsing
+2012-11-13 16:42:07 processMessage :               >> Parsed out segment (RSP|1|answer|int||)
+2012-11-13 16:42:07 parseSegment :             >> Begin Parsing
+2012-11-13 16:42:07 processMessage :               >> Parsed out segment (MCH|192.168.254.11|5000|)
+2012-11-13 16:42:07 parseSegment :             >> Begin Parsing
+2012-11-13 16:42:07 processPubService :             >> Parsing 4 Segment(s)
+2012-11-13 16:42:07 processPubService :             >> Parsing Segment <SRV|>
+2012-11-13 16:42:07 processPubService :                >> Inserted service <CAR-LOAN> into DBase for teamID 1180
+2012-11-13 16:42:07 processPubService :                >> Service <CAR-LOAN> registered successfully
+2012-11-13 16:42:07 processPubService :             >> Parsing Segment <ARG|>
+2012-11-13 16:42:07 processPubService :                >> Inserted argument #1 into DBase for serviceID 4
+2012-11-13 16:42:07 processPubService :             >> Parsing Segment <RSP|>
+2012-11-13 16:42:07 processPubService :                >> Inserted response #1 into DBase for serviceID 4
+2012-11-13 16:42:07 processPubService :             >> Parsing Segment <MCH|>
+2012-11-13 16:42:09 processPubService :               >> Service IP Address (192.168.254.11) is not reachable
+2012-11-13 16:42:09 processMessage :                 >> found EOM marker
+2012-11-13 16:42:09 processMessage :               >> Incoming SOA Message FAILED to be Saved to Temporary File - moving to BAD location
+2012-11-13 16:42:09 processMessage :                 >> File (..\Incoming\currentMsg.soa) not renamed to (..\Bad\20121113164209629.soa)
+2012-11-13 16:42:09 processMessage :               >> Constructing NOT-OK Response
+2012-11-13 16:42:09 processMessage :                 >> (.. |-2|MCH segment - Service IP Address (192.168.254.11) is not reachable.| ..
+2012-11-13 16:42:09 processMessage :                 >> Rolling Back DBase transaction(s)
+2012-11-13 16:42:09 processMessage :           >> Processing Complete
+2012-11-13 16:42:09 startListen :           >> Message NOT RECEIVED
