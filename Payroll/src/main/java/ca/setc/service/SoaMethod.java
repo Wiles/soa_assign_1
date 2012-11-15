@@ -19,7 +19,7 @@ public class SoaMethod {
         this.name = name;
         this.methodName = method.getName();
         returnType = method.getReturnType();
-        this.returnDescriptions = returns;
+        this.returnDescriptions = returns.clone();
         final Annotation[][] paramAnnotations = method.getParameterAnnotations();
         final Class[] paramTypes = method.getParameterTypes();
         for (int i = 0; i < paramAnnotations.length; i++) {
@@ -60,7 +60,7 @@ public class SoaMethod {
 
     public String[] getReturnDescriptions()
     {
-        return returnDescriptions;
+        return returnDescriptions.clone()   ;
     }
 
 }

@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Segment {
 
-    private static final byte[] bPipe = new byte[]{(byte)0x7C};
-    List<Field> fields = new LinkedList<Field>();
+    private static final byte[] B_PIPE = new byte[]{(byte)0x7C};
+    private List<Field> fields = new LinkedList<Field>();
 
     public void addField(Field field)
     {
@@ -28,7 +28,7 @@ public class Segment {
             try
             {
                 wr.write(field.getValue());
-                wr.write(bPipe);
+                wr.write(B_PIPE);
             }
             catch(IOException ignore)
             {

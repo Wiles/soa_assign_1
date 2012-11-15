@@ -13,7 +13,7 @@ public class ServiceLoaderTest {
     @Test
     public void loadServices_shouldFindService_whenNormalClassPath() throws ClassNotFoundException, IOException
     {
-        Map<String, SoaService> services = ServiceLoader.LoadServices(ClasspathUrlFinder.findClassPaths());
+        Map<String, SoaService> services = ServiceLoader.loadServices(ClasspathUrlFinder.findClassPaths());
 
         Assert.assertEquals(2, services.size());
     }

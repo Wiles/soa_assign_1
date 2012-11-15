@@ -7,11 +7,11 @@ import java.util.List;
 
 public class Message {
 
-    private static final byte[] b0B = new byte[]{(byte)0x0B};
-    private static final byte[] b0D = new byte[]{(byte)0x0D};
-    private static final byte[] bEnd = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
+    private static final byte[] B_0B = new byte[]{(byte)0x0B};
+    private static final byte[] B_0D = new byte[]{(byte)0x0D};
+    private static final byte[] B_END = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
 
-    List<Segment> segments = new LinkedList<Segment>();
+    private List<Segment> segments = new LinkedList<Segment>();
 
     public void addSegment(Segment segment)
     {
@@ -29,13 +29,13 @@ public class Message {
         ByteArrayOutputStream wr = new ByteArrayOutputStream();
         try
         {
-            wr.write(b0B);
+            wr.write(B_0B);
             for(Segment segment : segments)
             {
                 wr.write(segment.toHl7());
-                wr.write(b0D);
+                wr.write(B_0D);
             }
-            wr.write(bEnd);
+            wr.write(B_END);
 
         }
         catch(IOException ignore)

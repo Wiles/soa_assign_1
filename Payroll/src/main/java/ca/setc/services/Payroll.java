@@ -5,7 +5,15 @@ import ca.setc.annotations.ParameterAnno;
 import ca.setc.annotations.ServiceAnno;
 
 @ServiceAnno(name = "PAYROLL", securityLevel = 1, description = "Pay roll thing")
-public class Payroll {
+public final class Payroll {
+
+    private Payroll(){}
+
+    private static final double WORK_WEEK_HOURS = 40.0;
+    private static final double OVERTIME_MULTIPLIER = 1.5;
+    private static final double SEASONAL_BASE_PAY = 150.0;
+    private static final int WEEKS_IN_YEAR = 52;
+
 
     @MethodAnno(name = "payCheckMaker", returnDescriptions = {"36 month", "48 month", "60 month"})
     public static Double payCheckMaker(
@@ -20,18 +28,18 @@ public class Payroll {
             @ParameterAnno(required = false, name = "contract")
             Integer contractWeeks) {
         if ("HOUR".equals(employeeType)) {
-            if (hoursWorked <= 40.0) {
+            if (hoursWorked <= WORK_WEEK_HOURS) {
                 return hoursWorked * rate;
             } else {
-                return (40.0 * rate) + ((hoursWorked - 40.0) * (rate * 1.50));
+                return (WORK_WEEK_HOURS * rate) + ((hoursWorked - WORK_WEEK_HOURS) * (rate * OVERTIME_MULTIPLIER));
             }
         } else if ("FULL".equals(employeeType)) {
-            return rate / 52;
+            return rate / WEEKS_IN_YEAR;
         } else if ("SEASON".equals(employeeType)) {
-            if (hoursWorked <= 40.0) {
+            if (hoursWorked <= WORK_WEEK_HOURS) {
                 return seasonal * rate;
             } else {
-                return (rate * seasonal) + 150.0;
+                return (rate * seasonal) + SEASONAL_BASE_PAY;
             }
         } else if ("CONTRACT".equals(employeeType)) {
             return rate / contractWeeks;

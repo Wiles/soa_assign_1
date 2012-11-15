@@ -19,7 +19,6 @@ public class SoaService {
     public SoaService(String className) throws ClassNotFoundException {
         boolean foundService = false;
         c = Class.forName(className);
-        Class<?> c = Class.forName(className);
         Annotation[] anns = c.getAnnotations();
         //Load service annotation
         for (Annotation ann : anns) {
@@ -45,7 +44,7 @@ public class SoaService {
                 }
             }
         }
-        if (foundService == false) {
+        if (!foundService) {
             throw new IllegalArgumentException("Class did not have service annotation");
         }
     }
@@ -59,7 +58,7 @@ public class SoaService {
         return this.description;
     }
 
-    public Object execute(String methodName, String[] params) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+    public Object execute(String methodName, String[] params) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         SoaMethod meth = methods.get(methodName);
         List<Object> paramList = new LinkedList<Object>();
         if (meth == null) {

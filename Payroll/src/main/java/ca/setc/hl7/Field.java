@@ -1,5 +1,7 @@
 package ca.setc.hl7;
 
+import java.io.UnsupportedEncodingException;
+
 public class Field {
     private String value;
 
@@ -15,6 +17,13 @@ public class Field {
 
     public byte[] getValue()
     {
-        return value.getBytes();
+        try
+        {
+            return value.getBytes("UTF-8");
+        }
+        catch(UnsupportedEncodingException ignore)
+        {
+            return new byte[0];
+        }
     }
 }

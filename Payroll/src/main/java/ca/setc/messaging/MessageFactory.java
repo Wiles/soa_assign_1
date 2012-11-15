@@ -12,21 +12,19 @@ import java.util.List;
 
 public class MessageFactory {
 
-    byte OA = (byte)0x0A;
-    byte OB = (byte)0x0B;
-    byte OD = (byte)0x0D;
-    byte IC = (byte)0x1C;
-
     public Message registerService(SoaService service)
     {
-        Message message = new Message();
         SoaMethod method = service.getMethods().get(0);
+
+        Message message = new Message();
+
         Segment segment = new Segment();
         segment.addField(new Field("DRC"));
         segment.addField(new Field("PUB-SERVICE"));
-        segment.addField(new Field(Main.teamName));
-        segment.addField(new Field(Main.teamId));
+        segment.addField(new Field(Main.TEAM_NAME));
+        segment.addField(new Field(Main.TEAM_ID));
         message.addSegment(segment);
+
         segment = new Segment();
         segment.addField(new Field("SRV"));
         segment.addField(new Field(service.getName()));
@@ -57,7 +55,6 @@ public class MessageFactory {
         {
             String returnMessage = returns[i];
 
-            SoaParameter param = params.get(i);
             segment = new Segment();
             segment.addField(new Field("RSP"));
             segment.addField(new Field(i + i));
@@ -66,13 +63,12 @@ public class MessageFactory {
             message.addSegment(segment);
         }
 
-
-
         segment = new Segment();
         segment.addField(new Field("MCH"));
-        segment.addField(new Field(Main.ip));
-        segment.addField(new Field(Main.port));
+        segment.addField(new Field(Main.IP));
+        segment.addField(new Field(Main.PORT));
         message.addSegment(segment);
+
         return message;
     }
 
