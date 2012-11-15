@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Represents a full HL7 message
+ */
 public class Message {
 
     private static final byte[] B_0B = new byte[]{(byte)0x0B};
@@ -13,16 +16,29 @@ public class Message {
 
     private List<Segment> segments = new LinkedList<Segment>();
 
+    /**
+     * Adds an HL7 Segment
+     * @param segment
+     */
     public void addSegment(Segment segment)
     {
         this.segments.add(segment);
     }
 
+    /**
+     * Returns the segment at the given index or null if it does not exist
+     * @param index
+     * @return
+     */
     public Segment getSegment(int index)
     {
         return this.segments.get(index);
     }
 
+    /**
+     * Returns the message in HL7 format
+     * @return
+     */
     public byte[] toHl7()
     {
 

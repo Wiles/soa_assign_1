@@ -10,9 +10,17 @@ import ca.setc.service.SoaService;
 
 import java.util.List;
 
-public class MessageFactory {
+/**
+ * Builds HL7 messages
+ */
+public class MessageBuilder {
 
-    public Message registerService(SoaService service)
+    /**
+     * Creates a publish service message based on the given service
+     * @param service
+     * @return
+     */
+    public Message publishService(SoaService service)
     {
         SoaMethod method = service.getMethods().get(0);
 

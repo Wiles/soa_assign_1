@@ -8,6 +8,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * Represents a SOA service
+ */
 public class SoaService {
 
     private String name;
@@ -16,6 +19,11 @@ public class SoaService {
     private String description;
     private Map<String, SoaMethod> methods = new HashMap<String, SoaMethod>();
 
+    /**
+     * Constructor
+     * @param className
+     * @throws ClassNotFoundException
+     */
     public SoaService(String className) throws ClassNotFoundException {
         boolean foundService = false;
         c = Class.forName(className);
@@ -49,15 +57,32 @@ public class SoaService {
         }
     }
 
+    /**
+     * get the security level of the service
+     * @return
+     */
     public int getSecurityLevel() {
         return securityLevel;
     }
 
+    /**
+     * get the description of the service
+     * @return
+     */
     public String getDescription()
     {
         return this.description;
     }
 
+    /**
+     * Executes a method against the service
+     * @param methodName
+     * @param params
+     * @return the return value of the method called
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
     public Object execute(String methodName, String[] params) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         SoaMethod meth = methods.get(methodName);
         List<Object> paramList = new LinkedList<Object>();
@@ -101,10 +126,18 @@ public class SoaService {
 
     }
 
+    /**
+     * get the name
+     * @return
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get the methods
+     * @return
+     */
     public List<SoaMethod> getMethods()
     {
         return new ArrayList<SoaMethod>(this.methods.values());

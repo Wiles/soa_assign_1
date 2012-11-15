@@ -1,7 +1,7 @@
 package ca.setc;
 
 import ca.setc.hl7.Message;
-import ca.setc.messaging.MessageFactory;
+import ca.setc.messaging.MessageBuilder;
 import ca.setc.service.SoaService;
 import org.scannotation.ClasspathUrlFinder;
 
@@ -11,6 +11,9 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.Map;
 
+/**
+ * Main class containing main start method
+ */
 public final class Main {
     private static Map<String, SoaService> services;
 
@@ -23,11 +26,21 @@ public final class Main {
 
     private Main(){}
 
+    /**
+     * Start method
+     *
+     * @param args
+     * @throws ClassNotFoundException
+     * @throws IOException
+     * @throws InvocationTargetException
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     */
     public static void main(String[] args) throws ClassNotFoundException, IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         URL[] urls = ClasspathUrlFinder.findClassPaths();
         services = ServiceLoader.loadServices(urls);
-        MessageFactory mf = new MessageFactory();
-        Message message = mf.registerService(services.get("CAR-LOAN"));
+        MessageBuilder mf = new MessageBuilder();
+        Message message = mf.publishService(services.get("CAR-LOAN"));
 
         Socket sock = new Socket(REGISTRY_IP, REGISTRY_PORT);
 

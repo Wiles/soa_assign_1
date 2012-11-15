@@ -7,6 +7,9 @@ import ca.setc.annotations.ServiceAnno;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Car Loan calculator service
+ */
 @ServiceAnno(name = "CAR-LOAN", securityLevel = 1, description = "Car Loan thing")
 public final class CarLoan {
 
@@ -16,6 +19,13 @@ public final class CarLoan {
 
     private CarLoan(){}
 
+    /**
+     *Calculates the monthly payments
+     *
+     * @param principal
+     * @param rate
+     * @return payment
+     */
     @MethodAnno(name = "carLoanCalculator", returnDescriptions = {"Payment"})
     public static Double[] carLoad(
             @ParameterAnno(name = "principal")

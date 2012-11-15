@@ -4,6 +4,9 @@ import ca.setc.annotations.MethodAnno;
 import ca.setc.annotations.ParameterAnno;
 import ca.setc.annotations.ServiceAnno;
 
+/**
+ * Payroll calculator service
+ */
 @ServiceAnno(name = "PAYROLL", securityLevel = 1, description = "Pay roll thing")
 public final class Payroll {
 
@@ -14,7 +17,16 @@ public final class Payroll {
     private static final double SEASONAL_BASE_PAY = 150.0;
     private static final int WEEKS_IN_YEAR = 52;
 
-
+    /**
+     * Calculates the paycheck amount
+     *
+     * @param employeeType
+     * @param hoursWorked
+     * @param rate
+     * @param seasonal
+     * @param contractWeeks
+     * @return paycheck amount
+     */
     @MethodAnno(name = "payCheckMaker", returnDescriptions = {"36 month", "48 month", "60 month"})
     public static Double payCheckMaker(
             @ParameterAnno(name = "type")
