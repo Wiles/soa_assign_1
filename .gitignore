@@ -1,4 +1,13 @@
 *~
+.idea
+.settings/
+.project
+.classpath
+target/
+*.iml
+dependency-reduced-pom.xml
+log/*
+
 #OS junk files
 [Tt]humbs.db
 *.DS_Store
