@@ -1,11 +1,13 @@
 package ca.setc.messaging;
 
 import ca.setc.Main;
+import ca.setc.hl7.Field;
+import ca.setc.hl7.Message;
+import ca.setc.hl7.Segement;
 import ca.setc.service.SoaMethod;
 import ca.setc.service.SoaParameter;
 import ca.setc.service.SoaService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MessageFactory {
@@ -15,40 +17,38 @@ public class MessageFactory {
     byte OD = (byte)0x0D;
     byte IC = (byte)0x1C;
 
-    public Byte[] registerService(SoaService service)
+    public Message registerService(SoaService service)
     {
-        List<Byte> message = new ArrayList<Byte>();
+        Message message = new Message();
         SoaMethod method = service.getMethods().get(0);
-        message.add(OB);
-        message.addAll(toByteList(String.format(
-                "DRC|PUB-SERVICE|%s|%d|",
-                Main.teamName,
-                Main.teamId)));
+        Segement segement = new Segement();
+        segement.addField(new Field("DRC"));
+        segement.addField(new Field("PUB-SERVICE"));
+        segement.addField(new Field(Main.teamName));
+        segement.addField(new Field(Main.teamId));
+        message.addSegement(segement);
+        segement = new Segement();
+        segement.addField(new Field("SRV"));
+        segement.addField(new Field(service.getName()));
+        segement.addField(new Field(method.getName()));
+        segement.addField(new Field(service.getSecurityLevel()));
+        segement.addField(new Field(method.getParameters().size()));
+        segement.addField(new Field(method.getReturnDescriptions().length));
+        segement.addField(new Field(service.getDescription()));
+        message.addSegement(segement);
 
-        message.add(OD);
-        message.addAll(toByteList(String.format(
-                "SRV|%s|%s|%d|%d|%d|%s|",
-                service.getName(),
-                method.getName(),
-                service.getSecurityLevel(),
-                method.getParameters().size(),
-                method.getReturnDescriptions().length,
-                service.getDescription()
-        )));
-        message.add(OD);
         List<SoaParameter> params = method.getParameters();
 
         for(int i = 0; i < params.size(); ++i)
         {
             SoaParameter param = params.get(i);
-            message.addAll(toByteList(String.format(
-                    "ARG|%d|%s|%s|%s|",
-                    i + 1,
-                    param.getName(),
-                    prettyTypeName(param.getType()),
-                    param.isRequired()?"mandatory":"optional"
-            )));
-            message.add(OD);
+            segement = new Segement();
+            segement.addField(new Field("ARG"));
+            segement.addField(new Field(i + i));
+            segement.addField(new Field(param.getName()));
+            segement.addField(new Field(prettyTypeName(param.getType())));
+            segement.addField(new Field(param.isRequired()?"mandatory":"optional"));
+            message.addSegement(segement);
         }
 
         String[] returns = method.getReturnDescriptions();
@@ -56,24 +56,24 @@ public class MessageFactory {
         for(int i = 0; i < returns.length; ++i)
         {
             String returnMessage = returns[i];
-            message.addAll(toByteList(String.format(
-                    "RSP|%d|%s|%s||",
-                    i + 1,
-                    returnMessage,
-                    prettyTypeName(method.getReturnType())
-            )));
-            message.add(OD);
+
+            SoaParameter param = params.get(i);
+            segement = new Segement();
+            segement.addField(new Field("RSP"));
+            segement.addField(new Field(i + i));
+            segement.addField(new Field(returnMessage));
+            segement.addField(new Field(prettyTypeName(method.getReturnType())));
+            message.addSegement(segement);
         }
-        message.addAll(toByteList(String.format(
-                "MCH|%s|%s|",
-                Main.ip,
-                Main.port)));
-        
-        message.add(OD);
-        message.add(IC);
-        message.add(OD);
-        message.add(OA);
-        return message.toArray(new Byte[message.size()]);
+
+
+
+        segement = new Segement();
+        segement.addField(new Field("MCH"));
+        segement.addField(new Field(Main.ip));
+        segement.addField(new Field(Main.port));
+        message.addSegement(segement);
+        return message;
     }
 
     private String prettyTypeName(Class<?> type)
@@ -94,16 +94,5 @@ public class MessageFactory {
         {
             return "unknown";
         }
-    }
-
-    private List<Byte> toByteList(String message)
-    {
-        byte[] bytea = message.getBytes();
-        List<Byte> byteb = new ArrayList<Byte>();
-        for(int i = 0; i < bytea.length; ++i)
-        {
-            byteb.add(bytea[i]);
-        }
-        return byteb;
     }
 }

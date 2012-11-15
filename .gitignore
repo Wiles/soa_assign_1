@@ -7,7 +7,7 @@ target/
 *.iml
 dependency-reduced-pom.xml
 log/*
-incoming/*
+incoming/
 
 
 #OS junk files

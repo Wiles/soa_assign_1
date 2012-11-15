@@ -1,10 +1,13 @@
 package ca.setc;
 
+import ca.setc.hl7.Message;
 import ca.setc.messaging.MessageFactory;
 import ca.setc.service.SoaService;
 import org.scannotation.ClasspathUrlFinder;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.net.URL;
 import java.util.Map;
@@ -13,31 +16,24 @@ public class Main {
     static Map<String, SoaService> services;
 
     public static String teamName = "Blotto";
-    public static int teamId = 1180;
-    public static int port = 5000;
+    public static Integer teamId = 1180;
+    public static Integer port = 5000;
     public static String ip = "127.0.0.1";
     public static String registryIp = "localhost";
-    public static int registryPort = 3128;
+    public static Integer registryPort = 3128;
 
     public static void main(String[] args) throws Exception {
         URL[] urls = ClasspathUrlFinder.findClassPaths();
         services = ServiceLoader.LoadServices(urls);
         MessageFactory mf = new MessageFactory();
-        Byte[] l = mf.registerService(services.get("CAR-LOAN"));
-        byte[] array = new byte[l.length];
-        int i = 0;
-
-        for (Byte current : l) {
-            array[i] = current;
-            i++;
-        }
-        System.out.println(new String(array));
+        Message message = mf.registerService(services.get("CAR-LOAN"));
 
         Socket sock = new Socket(registryIp, registryPort);
 
-        PrintWriter writer = new PrintWriter(sock.getOutputStream(), true);
+        OutputStream writer = sock.getOutputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-        writer.println(new String(array));
+        writer.write(message.toHl7());
+        writer.flush();
         String response;
         while( (response= reader.readLine()) != null)
         {
