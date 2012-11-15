@@ -11,16 +11,16 @@ public class Message {
     private static final byte[] b0D = new byte[]{(byte)0x0D};
     private static final byte[] bEnd = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
 
-    List<Segement> segements = new LinkedList<Segement>();
+    List<Segment> segments = new LinkedList<Segment>();
 
-    public void addSegement(Segement segement)
+    public void addSegment(Segment segment)
     {
-        this.segements.add(segement);
+        this.segments.add(segment);
     }
 
-    public Segement getSegement(int index)
+    public Segment getSegment(int index)
     {
-        return this.segements.get(index);
+        return this.segments.get(index);
     }
 
     public byte[] toHl7()
@@ -30,9 +30,9 @@ public class Message {
         try
         {
             wr.write(b0B);
-            for(Segement segement : segements)
+            for(Segment segment : segments)
             {
-                wr.write(segement.toHl7());
+                wr.write(segment.toHl7());
                 wr.write(b0D);
             }
             wr.write(bEnd);

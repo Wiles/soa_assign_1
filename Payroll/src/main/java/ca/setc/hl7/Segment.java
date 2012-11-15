@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Segement {
+public class Segment {
 
     private static final byte[] bPipe = new byte[]{(byte)0x7C};
     List<Field> fields = new LinkedList<Field>();
