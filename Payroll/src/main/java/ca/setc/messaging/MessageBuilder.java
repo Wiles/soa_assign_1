@@ -107,7 +107,6 @@ public class MessageBuilder {
         message.addSegment(segment);
 
         return message;
-
     }
 
 
@@ -163,6 +162,13 @@ public class MessageBuilder {
         return message;
     }
 
+    /**
+     * Creates a query service message
+     * @param teamName
+     * @param teamId
+     * @param serviceName
+     * @return
+     */
     public Message queryService(String teamName, int teamId, String serviceName)
     {
         Message message = new Message();

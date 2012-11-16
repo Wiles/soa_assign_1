@@ -19,6 +19,22 @@ public class Field {
     }
 
     /**
+     * Constructor for byte array values
+     */
+    public Field(byte[] bytes)
+    {
+        try
+        {
+            this.value = new String(bytes, "UTF-8");
+        }
+        catch(UnsupportedEncodingException ex)
+        {
+            this.value = "";
+        }
+    }
+
+
+    /**
      * Constructor for Integer values
      * @param value
      */

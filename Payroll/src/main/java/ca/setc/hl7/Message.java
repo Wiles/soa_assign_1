@@ -1,7 +1,11 @@
 package ca.setc.hl7;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,11 +14,53 @@ import java.util.List;
  */
 public class Message {
 
-    private static final byte[] B_0B = new byte[]{(byte)0x0B};
-    private static final byte[] B_0D = new byte[]{(byte)0x0D};
-    private static final byte[] B_END = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
+    public static final byte[] B_BOM = new byte[]{(byte)0x0B};
+    public static final byte[] B_EOS = new byte[]{(byte)0x0D};
+    public static final byte[] B_EOM = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
 
     private List<Segment> segments = new LinkedList<Segment>();
+
+    /**
+     * Constructor
+     */
+    public Message(){}
+
+    public Message(byte[] raw)
+    {
+
+        if(raw.length < 4)
+        {
+            throw new IllegalArgumentException("raw input is too short");
+        }
+        if(raw[0] != Message.B_BOM[0])
+        {
+            throw new IllegalArgumentException("raw does not contain a BOM");
+        }
+
+        if( raw[raw.length - 3] != Message.B_EOM[0] ||
+                raw[raw.length - 2] != Message.B_EOM[1] ||
+                raw[raw.length - 1] != Message.B_EOM[2])
+        {
+            throw new IllegalArgumentException("End of message is missing");
+        }
+
+        byte[] lessRaw = Arrays.copyOfRange(raw, 1, raw.length - 3);
+
+        List<Byte> segment = new ArrayList<Byte>();
+
+        for(int i = 0; i < lessRaw.length; ++i)
+        {
+            if(lessRaw[i] == Message.B_EOS[0])
+            {
+                addSegment(new Segment(ArrayUtils.toPrimitive(segment.toArray(new Byte[segment.size()]))));
+                segment.clear();
+            }
+            else
+            {
+                segment.add(lessRaw[i]);
+            }
+        }
+    }
 
     /**
      * Adds an HL7 Segment
@@ -45,13 +91,13 @@ public class Message {
         ByteArrayOutputStream wr = new ByteArrayOutputStream();
         try
         {
-            wr.write(B_0B);
+            wr.write(B_BOM);
             for(Segment segment : segments)
             {
                 wr.write(segment.toHl7());
-                wr.write(B_0D);
+                wr.write(B_EOS);
             }
-            wr.write(B_END);
+            wr.write(B_EOM);
 
         }
         catch(IOException ignore)
