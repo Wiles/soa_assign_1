@@ -29,7 +29,7 @@ public final class Main {
     /**
      * Start method
      *
-     * @param args
+     * @param args command line arguments
      * @throws ClassNotFoundException
      * @throws IOException
      * @throws InvocationTargetException
@@ -40,7 +40,7 @@ public final class Main {
         URL[] urls = ClasspathUrlFinder.findClassPaths();
         services = ServiceLoader.loadServices(urls);
         MessageBuilder mf = new MessageBuilder();
-        Message message = mf.publishService(services.get("CAR-LOAN"));
+        Message message = mf.publishService(services.get("PAYROLL"));
 
         Socket sock = new Socket(REGISTRY_IP, REGISTRY_PORT);
 
@@ -57,16 +57,8 @@ public final class Main {
         reader.close();
         writer.close();
         sock.close();
-        SoaService s = services.get("CAR-LOAN");
-        Object o = s.execute("carLoanCalculator", new String[]{"10000.0", "5.0"});
-
-        Double[] dd = (Double[]) o;
-        for (Double d : dd) {
-            out.println(d);
-        }
-
-        s = services.get("PAYROLL");
-        o = s.execute("payCheckMaker", new String[]{"HOUR","39","10","0.0","0"});
-        out.println((Double)o);
+        SoaService s = services.get("PAYROLL");
+        Object o = s.execute("payCheckMaker", new String[]{"HOUR","39","10","0.0","0"});
+        out.println(o);
     }
 }

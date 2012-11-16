@@ -50,7 +50,7 @@ public class MessageBuilder {
             SoaParameter param = params.get(i);
             segment = new Segment();
             segment.addField(new Field("ARG"));
-            segment.addField(new Field(i + i));
+            segment.addField(new Field(i + 1));
             segment.addField(new Field(param.getName()));
             segment.addField(new Field(prettyTypeName(param.getType())));
             segment.addField(new Field(param.isRequired()?"mandatory":"optional"));
@@ -65,7 +65,7 @@ public class MessageBuilder {
 
             segment = new Segment();
             segment.addField(new Field("RSP"));
-            segment.addField(new Field(i + i));
+            segment.addField(new Field(i + 1));
             segment.addField(new Field(returnMessage));
             segment.addField(new Field(prettyTypeName(method.getReturnType())));
             message.addSegment(segment);

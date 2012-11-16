@@ -27,7 +27,7 @@ public final class Payroll {
      * @param contractWeeks
      * @return paycheck amount
      */
-    @MethodAnno(name = "payCheckMaker", returnDescriptions = {"36 month", "48 month", "60 month"})
+    @MethodAnno(name = "payCheckMaker", returnDescriptions = {"36month", "48month", "60month"})
     public static Double payCheckMaker(
             @ParameterAnno(name = "type")
             String employeeType,
@@ -51,7 +51,7 @@ public final class Payroll {
             if (hoursWorked <= WORK_WEEK_HOURS) {
                 return seasonal * rate;
             } else {
-                return (rate * seasonal) + SEASONAL_BASE_PAY;
+                return (seasonal * rate) + SEASONAL_BASE_PAY;
             }
         } else if ("CONTRACT".equals(employeeType)) {
             return rate / contractWeeks;
