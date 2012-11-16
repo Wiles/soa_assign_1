@@ -7,11 +7,25 @@ import ca.setc.annotations.ServiceAnno;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Car Loan calculator service
+ */
 @ServiceAnno(name = "CAR-LOAN", securityLevel = 1, description = "Car Loan thing")
-public class CarLoan {
+public final class CarLoan {
 
-    private static int[] months = new int[]{36, 48, 60};
+    private static final int[] MONTHS = new int[]{36, 48, 60};
 
+    private static final double DIVISOR = 1200.0;
+
+    private CarLoan(){}
+
+    /**
+     *Calculates the monthly payments
+     *
+     * @param principal
+     * @param rate
+     * @return payment
+     */
     @MethodAnno(name = "carLoanCalculator", returnDescriptions = {"Payment"})
     public static Double[] carLoad(
             @ParameterAnno(name = "principal")
@@ -19,9 +33,9 @@ public class CarLoan {
             @ParameterAnno(name = "rate")
             Double rate) {
         List<Double> payments = new LinkedList<Double>();
-        double monthlyRate = rate / 1200.0;
+        double monthlyRate = rate / DIVISOR;
 
-        for (int month : months) {
+        for (int month : MONTHS) {
             payments.add((monthlyRate + (monthlyRate / (Math.pow(1 + monthlyRate, month) - 1))) * principal);
         }
 
