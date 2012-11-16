@@ -53,6 +53,12 @@
     <Compile Include="Connection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Purchase-Totaller.csproj">
+      <Project>{a4c7c5b6-b21a-4e31-bfa2-b72b8692dd71}</Project>
+      <Name>Purchase-Totaller</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

@@ -45,8 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="hl7\HlConnection.cs" />
-    <Compile Include="hl7\HlRequest.cs" />
-    <Compile Include="hl7\HlResponse.cs" />
+    <Compile Include="hl7\Request.cs" />
+    <Compile Include="hl7\Response.cs" />
     <Compile Include="hl7\HlService.cs" />
     <Compile Include="ui\MainForm.cs">
       <SubType>Form</SubType>
