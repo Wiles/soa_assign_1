@@ -80,6 +80,115 @@ public class MessageBuilder {
         return message;
     }
 
+    /**
+     * Creates a register team message
+     * @param teamName
+     * @return
+     */
+    public Message registerTeam(String teamName)
+    {
+        Message message = new Message();
+
+        Segment segment = new Segment();
+
+        segment.addField(new Field("DRC"));
+        segment.addField(new Field("REG-TEAM"));
+        segment.addField(new Field(""));
+        segment.addField(new Field(""));
+
+        message.addSegment(segment);
+
+        segment = new Segment();
+
+        segment.addField(new Field("INF"));
+        segment.addField(new Field(teamName));
+        segment.addField(new Field(""));
+        segment.addField(new Field(""));
+        message.addSegment(segment);
+
+        return message;
+
+    }
+
+
+    /**
+     * Creates a unregister team message
+     * @param teamName
+     * @return
+     */
+    public Message unregisterTeam(String teamName, int teamId)
+    {
+        Message message = new Message();
+
+        Segment segment = new Segment();
+
+        segment.addField(new Field("DRC"));
+        segment.addField(new Field("UNREG-TEAM"));
+        segment.addField(new Field(teamName));
+        segment.addField(new Field(teamId));
+        message.addSegment(segment);
+
+        return message;
+    }
+
+    /**
+     * Creates a query team message
+     * @param localTeam
+     * @param localId
+     * @param queryTeam
+     * @param queryId
+     * @param serviceName
+     * @return
+     */
+    public Message queryTeam(String localTeam, int localId, String queryTeam, int queryId, String serviceName)
+    {
+        Message message = new Message();
+
+        Segment segment = new Segment();
+
+        segment.addField(new Field("DRC"));
+        segment.addField(new Field("QUERY-TEAM"));
+        segment.addField(new Field(localTeam));
+        segment.addField(new Field(localId));
+        message.addSegment(segment);
+
+        segment = new Segment();
+
+        segment.addField(new Field("INF"));
+        segment.addField(new Field(queryTeam));
+        segment.addField(new Field(queryId));
+        segment.addField(new Field(serviceName));
+        message.addSegment(segment);
+
+        return message;
+    }
+
+    public Message queryService(String teamName, int teamId, String serviceName)
+    {
+        Message message = new Message();
+
+        Segment segment = new Segment();
+
+        segment.addField(new Field("DRC"));
+        segment.addField(new Field("QUERY-SERVICE"));
+        segment.addField(new Field(teamName));
+        segment.addField(new Field(teamId));
+        message.addSegment(segment);
+
+        segment = new Segment();
+
+        segment.addField(new Field("SRV"));
+        segment.addField(new Field(serviceName));
+        segment.addField(new Field(""));
+        segment.addField(new Field(""));
+        segment.addField(new Field(""));
+        segment.addField(new Field(""));
+        segment.addField(new Field(""));
+        message.addSegment(segment);
+
+        return message;
+    }
+
     private String prettyTypeName(Class<?> type)
     {
         if(type == Double.class || type == Double[].class)

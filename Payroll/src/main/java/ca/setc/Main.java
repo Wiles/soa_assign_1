@@ -7,6 +7,7 @@ import org.scannotation.ClasspathUrlFinder;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
 import java.util.Map;
@@ -42,6 +43,10 @@ public final class Main {
         MessageBuilder mf = new MessageBuilder();
         Message message = mf.publishService(services.get("PAYROLL"));
 
+
+        ServerSocket serverSocket = null;
+        boolean listening = true;
+
         Socket sock = new Socket(REGISTRY_IP, REGISTRY_PORT);
 
         OutputStream writer = sock.getOutputStream();
@@ -60,5 +65,19 @@ public final class Main {
         SoaService s = services.get("PAYROLL");
         Object o = s.execute("payCheckMaker", new String[]{"HOUR","39","10","0.0","0"});
         out.println(o);
+
+
+        try {
+            serverSocket = new ServerSocket(PORT);
+        } catch (IOException e) {
+            System.err.println("Could not listen on port: " + PORT);
+            System.exit(-1);
+        }
+
+        while (listening)
+            new SoaSocketListener(serverSocket.accept()).start();
+
+        serverSocket.close();
+
     }
 }
