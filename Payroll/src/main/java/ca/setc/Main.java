@@ -74,7 +74,18 @@ public final class Main {
             soa = new SoaRegistry(registryIp, registryPort);
 
             int teamId = soa.registerTeam(teamName);
-            soa.publishService(teamName, teamId, serviceIp, servicePort, services.get("PAYROLL"));
+            try
+            {
+                soa.publishService(teamName, teamId, serviceIp, servicePort, services.get("PAYROLL"));
+            }
+            catch(SoaRegistryException ex)
+            {
+                if(!ex.getErrorMessage().equals("Team '"+teamName+"' (ID : "+teamId+") has already published service PAYROLL"))
+                {
+                    System.out.println(ex.getMessage());
+                    throw ex;
+                }
+            }
 
             ServerSocket serverSocket = null;
             boolean listening = true;
