@@ -10,11 +10,13 @@ namespace Purchase_Totaller.hl7
     {
         public readonly string Name;
         public readonly List<ServiceArgument> Args;
+        public readonly ServiceReturn Return;
 
         public HlService(string name)
         {
             this.Name = name;
-            Args = new List<ServiceArgument>();
+            this.Args = new List<ServiceArgument>();
+            this.Return = new ServiceReturn();
         }
     }
 
