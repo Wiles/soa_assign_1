@@ -2,28 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Purchase_Totaller.hl7
 {
-    public class HlConnection
+    public class HlConnection : IDisposable
     {
         public readonly string TeamName;
 
-        private int teamId;
-        public int TeamId
+        private int? teamId = null;
+        public int? TeamId
         {
-            get { return teamId; }
+            get 
+            { 
+                return teamId;
+            }
         }
 
+        private readonly Socket socket;
         private readonly IPAddress ip;
         private readonly int port;
-        public HlConnection(string teamName)
+        public HlConnection(string teamName): this(teamName, IPAddress.Parse("127.0.0.1"), 3128)
         {
-            this.TeamName = teamName;
-            ip = IPAddress.Parse("127.0.0.1");
-            port = 50020;
         }
     
         public HlConnection(string teamName, IPAddress ip, int port)
@@ -31,10 +33,38 @@ namespace Purchase_Totaller.hl7
             this.TeamName = teamName;
             this.ip = ip;
             this.port = port;
+
+            this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        }
+
+        private void Connect()
+        {
+            socket.Connect(ip, port);
+        }
+
+        public void Dispose()
+        {
+            if (socket.Connected)
+            {
+                socket.Disconnect(false);
+                socket.Close();
+            }
+        }
+
+        private Response IssueRequest(Request request)
+        {
+            socket.Send(Encoding.ASCII.GetBytes(request.ToString()));
+
+            var recv = new List<ArraySegment<byte>> ();
+            socket.Receive(recv);
+
+            // TODO: Create factory
+            return null;
         }
 
         public RegisterTeamResponse Register()
         {
+            var request = new RegisterTeamRequest(TeamName);
             throw new NotImplementedException();
         }
 

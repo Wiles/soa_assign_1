@@ -8,6 +8,7 @@ namespace Purchase_Totaller.hl7
 {
     public class Request
     {
+        public readonly static string Delimiter = "|";
         public readonly static string NewRow = ((char)13).ToString();
         public readonly static string BeginMarker = ((char)11).ToString();
         public readonly static string EndMarker = ((char)28).ToString();
@@ -34,13 +35,13 @@ namespace Purchase_Totaller.hl7
 
         public override string ToString()
         {
-            return BeginMarker + String.Join("|", Contents) + EndMarker + NewRow;
+            return BeginMarker + String.Join(Delimiter, Contents) + EndMarker + NewRow;
         }
     }
 
-    public class RegisterRequest : Request
+    public class RegisterTeamRequest : Request
     {
-        public RegisterRequest(string teamname)
+        public RegisterTeamRequest(string teamname)
             : base("REG-TEAM", "", "")
         {
             Contents.Add("INF");
@@ -51,9 +52,9 @@ namespace Purchase_Totaller.hl7
         }
     }
 
-    public class UnRegisterRequest : Request
+    public class UnRegisterTeamRequest : Request
     {
-        public UnRegisterRequest(string teamName, int teamId)
+        public UnRegisterTeamRequest(string teamName, int teamId)
             : base("UNREG-TEAM", teamName, teamId.ToString())
         {
         }
