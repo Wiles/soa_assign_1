@@ -213,7 +213,17 @@ namespace Purchase_Totaller.hl7
                     }
 
 
+                    for (int resp = 0; resp < numResponses; resp++)
+                    {
+                        var row = rows[1 + numArgs + resp];
+                        Debug.Assert(row[0] == "RSP");
 
+                        var pos = int.Parse(row[1]);
+                        var argName = row[2];
+                        var dataType = row[3];
+
+
+                    }
                 }
                 catch (Exception)
                 {
