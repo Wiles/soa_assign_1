@@ -3,6 +3,7 @@ package ca.setc;
 
 import ca.setc.service.SoaService;
 import ca.setc.services.CarLoan;
+import ca.setc.soa.ServiceLoader;
 import org.junit.Assert;
 import org.junit.Test;
 import org.scannotation.ClasspathUrlFinder;

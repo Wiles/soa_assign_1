@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class Message {
 
-    public static final byte[] B_BOM = new byte[]{(byte)0x0B};
-    public static final byte[] B_EOS = new byte[]{(byte)0x0D};
-    public static final byte[] B_EOM = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
+    private static final byte[] B_BOM = new byte[]{(byte)0x0B};
+    private static final byte[] B_EOS = new byte[]{(byte)0x0D};
+    private static final byte[] B_EOM = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
 
     private List<Segment> segments = new LinkedList<Segment>();
 
@@ -25,10 +25,13 @@ public class Message {
      */
     public Message(){}
 
+    /**
+     * Creates a message based on an hl7 byte array
+     * @param raw hl7 message
+     */
     public Message(byte[] raw)
     {
-
-        if(raw.length < 4)
+        if(raw.length < B_BOM.length + B_EOM.length)
         {
             throw new IllegalArgumentException("raw input is too short");
         }
@@ -44,7 +47,7 @@ public class Message {
             throw new IllegalArgumentException("End of message is missing");
         }
 
-        byte[] lessRaw = Arrays.copyOfRange(raw, 1, raw.length - 3);
+        byte[] lessRaw = Arrays.copyOfRange(raw, B_BOM.length, raw.length - B_EOM.length);
 
         List<Byte> segment = new ArrayList<Byte>();
 
@@ -52,7 +55,8 @@ public class Message {
         {
             if(lessRaw[i] == Message.B_EOS[0])
             {
-                addSegment(new Segment(ArrayUtils.toPrimitive(segment.toArray(new Byte[segment.size()]))));
+                Segment s = new Segment(ArrayUtils.toPrimitive(segment.toArray(new Byte[segment.size()])));
+                add(s);
                 segment.clear();
             }
             else
@@ -66,7 +70,7 @@ public class Message {
      * Adds an HL7 Segment
      * @param segment
      */
-    public void addSegment(Segment segment)
+    public void add(Segment segment)
     {
         this.segments.add(segment);
     }
@@ -76,7 +80,7 @@ public class Message {
      * @param index
      * @return
      */
-    public Segment getSegment(int index)
+    public Segment get(int index)
     {
         return this.segments.get(index);
     }

@@ -27,7 +27,7 @@ public final class Payroll {
      * @param contractWeeks
      * @return paycheck amount
      */
-    @MethodAnno(name = "payCheckMaker", returnDescriptions = {"36month", "48month", "60month"})
+    @MethodAnno(name = "payCheckMaker", returnDescriptions = {"pay"})
     public static Double payCheckMaker(
             @ParameterAnno(name = "type")
             String employeeType,

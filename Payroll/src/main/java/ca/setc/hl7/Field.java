@@ -36,7 +36,7 @@ public class Field {
 
     /**
      * Constructor for Integer values
-     * @param value
+     * @param value integer value
      */
     public Field(int value)
     {
@@ -44,10 +44,19 @@ public class Field {
     }
 
     /**
-     * returns the value formatted as a byte array ready to put into an HL7 message
-     * @return
+     * get the value
+     * @return the valure
      */
-    public byte[] getValue()
+    public String get()
+    {
+        return this.value;
+    }
+
+    /**
+     * returns the value formatted as a byte array ready to put into an HL7 message
+     * @return values in bytes
+     */
+    public byte[] getBytes()
     {
         try
         {

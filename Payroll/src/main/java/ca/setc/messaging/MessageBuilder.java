@@ -1,6 +1,5 @@
 package ca.setc.messaging;
 
-import ca.setc.Main;
 import ca.setc.hl7.Field;
 import ca.setc.hl7.Message;
 import ca.setc.hl7.Segment;
@@ -15,33 +14,39 @@ import java.util.List;
  */
 public class MessageBuilder {
 
+    private static final String DRC = "DRC";
+
     /**
      * Creates a publish service message based on the given service
+     * @param teamName
+     * @param teamId
+     * @param IP
      * @param service
+     *
      * @return
      */
-    public Message publishService(SoaService service)
+    public Message publishService(String teamName, int teamId, String IP, int port, SoaService service)
     {
         SoaMethod method = service.getMethods().get(0);
 
         Message message = new Message();
 
         Segment segment = new Segment();
-        segment.addField(new Field("DRC"));
-        segment.addField(new Field("PUB-SERVICE"));
-        segment.addField(new Field(Main.TEAM_NAME));
-        segment.addField(new Field(Main.TEAM_ID));
-        message.addSegment(segment);
+        segment.add(new Field(DRC));
+        segment.add(new Field("PUB-SERVICE"));
+        segment.add(new Field(teamName));
+        segment.add(new Field(teamId));
+        message.add(segment);
 
         segment = new Segment();
-        segment.addField(new Field("SRV"));
-        segment.addField(new Field(service.getName()));
-        segment.addField(new Field(method.getName()));
-        segment.addField(new Field(service.getSecurityLevel()));
-        segment.addField(new Field(method.getParameters().size()));
-        segment.addField(new Field(method.getReturnDescriptions().length));
-        segment.addField(new Field(service.getDescription()));
-        message.addSegment(segment);
+        segment.add(new Field("SRV"));
+        segment.add(new Field(service.getName()));
+        segment.add(new Field(method.getName()));
+        segment.add(new Field(service.getSecurityLevel()));
+        segment.add(new Field(method.getParameters().size()));
+        segment.add(new Field(method.getReturnDescriptions().length));
+        segment.add(new Field(service.getDescription()));
+        message.add(segment);
 
         List<SoaParameter> params = method.getParameters();
 
@@ -49,12 +54,12 @@ public class MessageBuilder {
         {
             SoaParameter param = params.get(i);
             segment = new Segment();
-            segment.addField(new Field("ARG"));
-            segment.addField(new Field(i + 1));
-            segment.addField(new Field(param.getName()));
-            segment.addField(new Field(prettyTypeName(param.getType())));
-            segment.addField(new Field(param.isRequired()?"mandatory":"optional"));
-            message.addSegment(segment);
+            segment.add(new Field("ARG"));
+            segment.add(new Field(i + 1));
+            segment.add(new Field(param.getName()));
+            segment.add(new Field(prettyTypeName(param.getType())));
+            segment.add(new Field(param.isRequired() ? "mandatory" : "optional"));
+            message.add(segment);
         }
 
         String[] returns = method.getReturnDescriptions();
@@ -64,18 +69,18 @@ public class MessageBuilder {
             String returnMessage = returns[i];
 
             segment = new Segment();
-            segment.addField(new Field("RSP"));
-            segment.addField(new Field(i + 1));
-            segment.addField(new Field(returnMessage));
-            segment.addField(new Field(prettyTypeName(method.getReturnType())));
-            message.addSegment(segment);
+            segment.add(new Field("RSP"));
+            segment.add(new Field(i + 1));
+            segment.add(new Field(returnMessage));
+            segment.add(new Field(prettyTypeName(method.getReturnType())));
+            message.add(segment);
         }
 
         segment = new Segment();
-        segment.addField(new Field("MCH"));
-        segment.addField(new Field(Main.IP));
-        segment.addField(new Field(Main.PORT));
-        message.addSegment(segment);
+        segment.add(new Field("MCH"));
+        segment.add(new Field(IP));
+        segment.add(new Field(port));
+        message.add(segment);
 
         return message;
     }
@@ -91,20 +96,20 @@ public class MessageBuilder {
 
         Segment segment = new Segment();
 
-        segment.addField(new Field("DRC"));
-        segment.addField(new Field("REG-TEAM"));
-        segment.addField(new Field(""));
-        segment.addField(new Field(""));
+        segment.add(new Field(DRC));
+        segment.add(new Field("REG-TEAM"));
+        segment.add(new Field(""));
+        segment.add(new Field(""));
 
-        message.addSegment(segment);
+        message.add(segment);
 
         segment = new Segment();
 
-        segment.addField(new Field("INF"));
-        segment.addField(new Field(teamName));
-        segment.addField(new Field(""));
-        segment.addField(new Field(""));
-        message.addSegment(segment);
+        segment.add(new Field("INF"));
+        segment.add(new Field(teamName));
+        segment.add(new Field(""));
+        segment.add(new Field(""));
+        message.add(segment);
 
         return message;
     }
@@ -113,6 +118,7 @@ public class MessageBuilder {
     /**
      * Creates a unregister team message
      * @param teamName
+     * @param  teamId
      * @return
      */
     public Message unregisterTeam(String teamName, int teamId)
@@ -121,11 +127,11 @@ public class MessageBuilder {
 
         Segment segment = new Segment();
 
-        segment.addField(new Field("DRC"));
-        segment.addField(new Field("UNREG-TEAM"));
-        segment.addField(new Field(teamName));
-        segment.addField(new Field(teamId));
-        message.addSegment(segment);
+        segment.add(new Field(DRC));
+        segment.add(new Field("UNREG-TEAM"));
+        segment.add(new Field(teamName));
+        segment.add(new Field(teamId));
+        message.add(segment);
 
         return message;
     }
@@ -145,19 +151,19 @@ public class MessageBuilder {
 
         Segment segment = new Segment();
 
-        segment.addField(new Field("DRC"));
-        segment.addField(new Field("QUERY-TEAM"));
-        segment.addField(new Field(localTeam));
-        segment.addField(new Field(localId));
-        message.addSegment(segment);
+        segment.add(new Field(DRC));
+        segment.add(new Field("QUERY-TEAM"));
+        segment.add(new Field(localTeam));
+        segment.add(new Field(localId));
+        message.add(segment);
 
         segment = new Segment();
 
-        segment.addField(new Field("INF"));
-        segment.addField(new Field(queryTeam));
-        segment.addField(new Field(queryId));
-        segment.addField(new Field(serviceName));
-        message.addSegment(segment);
+        segment.add(new Field("INF"));
+        segment.add(new Field(queryTeam));
+        segment.add(new Field(queryId));
+        segment.add(new Field(serviceName));
+        message.add(segment);
 
         return message;
     }
@@ -175,22 +181,22 @@ public class MessageBuilder {
 
         Segment segment = new Segment();
 
-        segment.addField(new Field("DRC"));
-        segment.addField(new Field("QUERY-SERVICE"));
-        segment.addField(new Field(teamName));
-        segment.addField(new Field(teamId));
-        message.addSegment(segment);
+        segment.add(new Field(DRC));
+        segment.add(new Field("QUERY-SERVICE"));
+        segment.add(new Field(teamName));
+        segment.add(new Field(teamId));
+        message.add(segment);
 
         segment = new Segment();
 
-        segment.addField(new Field("SRV"));
-        segment.addField(new Field(serviceName));
-        segment.addField(new Field(""));
-        segment.addField(new Field(""));
-        segment.addField(new Field(""));
-        segment.addField(new Field(""));
-        segment.addField(new Field(""));
-        message.addSegment(segment);
+        segment.add(new Field("SRV"));
+        segment.add(new Field(serviceName));
+        segment.add(new Field(""));
+        segment.add(new Field(""));
+        segment.add(new Field(""));
+        segment.add(new Field(""));
+        segment.add(new Field(""));
+        message.add(segment);
 
         return message;
     }

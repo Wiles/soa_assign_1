@@ -1,6 +1,6 @@
 package ca.setc.messaging;
 
-import ca.setc.ServiceLoader;
+import ca.setc.soa.ServiceLoader;
 import ca.setc.hl7.Message;
 import ca.setc.service.SoaService;
 import ca.setc.services.CarLoan;
@@ -46,7 +46,7 @@ public class MessageBuilderTest {
                 124,53,48,48,48,124,13,28,13,10};
 
         MessageBuilder mb = new MessageBuilder();
-        Message message = mb.publishService(services.get("CAR-LOAN"));
+        Message message = mb.publishService("Blotto", 1180, "127.0.0.1", 5000, services.get("CAR-LOAN"));
         Assert.assertArrayEquals(expected, message.toHl7());
     }
 

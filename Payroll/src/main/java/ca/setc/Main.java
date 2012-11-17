@@ -1,14 +1,18 @@
 package ca.setc;
 
-import ca.setc.hl7.Message;
-import ca.setc.messaging.MessageBuilder;
+import ca.setc.configuration.Config;
+import ca.setc.soa.ServiceLoader;
+import ca.setc.soa.SoaRegistry;
+import ca.setc.soa.SoaRegistryException;
 import ca.setc.service.SoaService;
+import ca.setc.soa.SoaSocketListener;
 import org.scannotation.ClasspathUrlFinder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.URL;
 import java.util.Map;
 
@@ -16,14 +20,8 @@ import java.util.Map;
  * Main class containing main start method
  */
 public final class Main {
-    private static Map<String, SoaService> services;
 
-    public static final String TEAM_NAME = "Blotto";
-    public static final Integer TEAM_ID = 1180;
-    public static final Integer PORT = 5000;
-    public static final String IP = "127.0.0.1";
-    public static final String REGISTRY_IP = "localhost";
-    public static final Integer REGISTRY_PORT = 3128;
+    private static Logger log = LoggerFactory.getLogger(Main.class);
 
     private Main(){}
 
@@ -37,47 +35,76 @@ public final class Main {
      * @throws NoSuchMethodException
      * @throws IllegalAccessException
      */
-    public static void main(String[] args) throws ClassNotFoundException, IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        URL[] urls = ClasspathUrlFinder.findClassPaths();
-        services = ServiceLoader.loadServices(urls);
-        MessageBuilder mf = new MessageBuilder();
-        Message message = mf.publishService(services.get("PAYROLL"));
-
-
-        ServerSocket serverSocket = null;
-        boolean listening = true;
-
-        Socket sock = new Socket(REGISTRY_IP, REGISTRY_PORT);
-
-        OutputStream writer = sock.getOutputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-        writer.write(message.toHl7());
-        writer.flush();
-        String response;
-        PrintWriter out = new PrintWriter(System.out, true);
-        while( (response = reader.readLine()) != null)
+    public static void main(String[] args) throws ClassNotFoundException, IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, SoaRegistryException {
+        try
         {
-            out.println(response);
+            URL[] urls = ClasspathUrlFinder.findClassPaths();
+            Map<String, SoaService> services;
+            services = ServiceLoader.loadServices(urls);
+
+            String teamName = Config.get("team.name");
+            String registryIp = Config.get("registry.ip");
+            int registryPort = 0;
+            int servicePort = 0;
+            try
+            {
+                registryPort = Integer.parseInt(Config.get("registry.port"));
+            }
+            catch(NumberFormatException e)
+            {
+                log.error("Could not parse soa port", e);
+                System.err.println("Could not parse soa port");
+                System.exit(-1);
+            }
+
+            try
+            {
+                servicePort = Integer.parseInt(Config.get("service.port"));
+            }
+            catch(NumberFormatException e)
+            {
+                log.error("Could not parse service port", e);
+                System.err.println("Could not parse service port");
+                System.exit(-1);
+            }
+
+            String serviceIp = Config.get("registry.ip");
+
+            SoaRegistry soa = null;
+            soa = new SoaRegistry(registryIp, registryPort);
+
+            int teamId = soa.registerTeam(teamName);
+            soa.publishService(teamName, teamId, serviceIp, servicePort, services.get("PAYROLL"));
+
+            ServerSocket serverSocket = null;
+            boolean listening = true;
+
+            try {
+                serverSocket = new ServerSocket(servicePort);
+            } catch (IOException e) {
+                log.error("Could not listen on port: " + servicePort);
+                System.err.println("Could not listen on port: " + servicePort);
+                System.exit(-1);
+            }
+            catch(NumberFormatException e)
+            {
+                log.error("Could not parse service port: " + servicePort);
+                System.err.println("Could not parse service port: " + servicePort);
+                System.exit(-1);
+            }
+
+            while (listening)
+            {
+                new SoaSocketListener(serverSocket.accept()).start();
+            }
+
+            serverSocket.close();
         }
-        reader.close();
-        writer.close();
-        sock.close();
-        SoaService s = services.get("PAYROLL");
-        Object o = s.execute("payCheckMaker", new String[]{"HOUR","39","10","0.0","0"});
-        out.println(o);
-
-
-        try {
-            serverSocket = new ServerSocket(PORT);
-        } catch (IOException e) {
-            System.err.println("Could not listen on port: " + PORT);
+        catch(Exception ex)
+        {
+            log.error("Unexpected error occurred.", ex);
+            System.err.println("Unexpected error occurred, see log for details. Shutting Down.");
             System.exit(-1);
         }
-
-        while (listening)
-            new SoaSocketListener(serverSocket.accept()).start();
-
-        serverSocket.close();
-
     }
 }

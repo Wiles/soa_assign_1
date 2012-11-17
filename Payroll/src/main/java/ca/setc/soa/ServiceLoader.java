@@ -1,4 +1,4 @@
-package ca.setc;
+package ca.setc.soa;
 
 import ca.setc.annotations.ServiceAnno;
 import ca.setc.service.SoaService;

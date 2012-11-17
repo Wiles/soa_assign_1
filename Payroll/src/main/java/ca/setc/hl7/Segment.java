@@ -17,13 +17,15 @@ public class Segment {
     private static final byte[] B_PIPE = new byte[]{(byte)0x7C};
     private List<Field> fields = new LinkedList<Field>();
 
-
     /**
      * Constructor
      */
     public Segment(){}
 
-
+    /**
+     * Creates a segment from an hl7 segment
+     * @param bytes bytes
+     */
     public Segment(byte[] bytes)
     {
         List<Byte> byteList = Arrays.asList(ArrayUtils.toObject(bytes));
@@ -42,7 +44,7 @@ public class Segment {
         {
             if(byteList.get(i) == B_PIPE[0])
             {
-                addField(new Field(ArrayUtils.toPrimitive(field.toArray(new Byte[field.size()]))));
+                add(new Field(ArrayUtils.toPrimitive(field.toArray(new Byte[field.size()]))));
                 field.clear();
             }
             else
@@ -57,7 +59,7 @@ public class Segment {
      * Adds a field to onto the end of the message
      * @param field
      */
-    public void addField(Field field)
+    public void add(Field field)
     {
         this.fields.add(field);
     }
@@ -67,7 +69,7 @@ public class Segment {
      * @param index
      * @return
      */
-    public Field getField(int index)
+    public Field get(int index)
     {
        return this.fields.get(index);
     }
@@ -83,7 +85,7 @@ public class Segment {
         {
             try
             {
-                wr.write(field.getValue());
+                wr.write(field.getBytes());
                 wr.write(B_PIPE);
             }
             catch(IOException ignore)
