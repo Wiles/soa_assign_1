@@ -59,6 +59,18 @@ namespace Purchase_Totaller.hl7
         }
     }
 
+
+    public class InvalidResponseTypeException : Exception
+    {
+        public InvalidResponseTypeException()
+        {
+        }
+
+        public InvalidResponseTypeException(string message, Exception e): base(message, e)
+        {
+        }
+    }
+
     public class ResponseFactory
     {
         private bool IsOkMessage(string message)
@@ -67,9 +79,9 @@ namespace Purchase_Totaller.hl7
             {
                 return message.Split(Request.Delimiter.ToCharArray())[1] == "OK";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new Exception("Failure to create if message is ok/failure"); ;
+                throw new Exception("Failure to create if message is ok/failure: " + ex.Message);
             }
         }
 
@@ -185,7 +197,7 @@ namespace Purchase_Totaller.hl7
                     var numArgs = int.Parse(rows[1][4]);
                     var numResponses = int.Parse(rows[1][5]);
                     
-                    var call = new HlService(name);
+                    var call = new RemoteServiceCall(name);
 
                     for (int arg = 0; arg < numArgs; arg++)
                     {

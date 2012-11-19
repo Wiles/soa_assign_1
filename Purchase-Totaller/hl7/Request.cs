@@ -33,9 +33,15 @@ namespace Purchase_Totaller.hl7
             Contents.Add(NewRow);
         }
 
+        public string ToHl7()
+        {
+            var hl7 = String.Join(Delimiter, Contents).Replace(NewRow + Delimiter, NewRow);
+            return BeginMarker + hl7 + EndMarker + NewRow;
+        }
+
         public override string ToString()
         {
-            return BeginMarker + String.Join(Delimiter, Contents) + EndMarker + NewRow;
+            return ToHl7();
         }
     }
 
@@ -76,10 +82,41 @@ namespace Purchase_Totaller.hl7
 
     public class PublishServiceRequest : Request
     {
-        public PublishServiceRequest(string teamName, int teamId):
+        public PublishServiceRequest(string teamName, int teamId, LocalService service):
             base("PUB-SERVICE", teamName, teamId.ToString())
         {
-            throw new NotImplementedException();
+            Contents.Add("SRV");
+            Contents.Add(service.Tag);
+            Contents.Add(service.Name);
+            Contents.Add(service.SecurityLevel.ToString());
+            Contents.Add(service.Args.Count.ToString());
+            Contents.Add(service.Returns.Count.ToString());
+            Contents.Add(service.Description);
+            Contents.Add(NewRow);
+
+            foreach (var arg in service.Args)
+            {
+                Contents.Add("ARG");
+                Contents.Add(arg.Position.ToString());
+                Contents.Add(arg.Name);
+                Contents.Add(ServiceArgument.TypeToString(arg.dataType));
+                Contents.Add(arg.Mandatory.ToString());
+                Contents.Add(NewRow);
+            }
+
+            foreach (var ret in service.Returns)
+            {
+                Contents.Add("RSP");
+                Contents.Add(ret.Position.ToString());
+                Contents.Add(ret.Name);
+                Contents.Add(ServiceArgument.TypeToString(ret.DataType));
+                Contents.Add(NewRow);
+            }
+
+            Contents.Add("MCH");
+            Contents.Add(service.Ip.ToString());
+            Contents.Add(service.Port.ToString());
+            Contents.Add(NewRow);
         }
     }
 
@@ -96,7 +133,7 @@ namespace Purchase_Totaller.hl7
 
     public class ExecuteServiceRequest : Request
     {
-        public ExecuteServiceRequest(string teamName, int teamId, HlServiceCall call):
+        public ExecuteServiceRequest(string teamName, int teamId, RemoteServiceCall call):
             base("EXEC-SERVICE", teamName, teamId.ToString())
         {
             throw new NotImplementedException();

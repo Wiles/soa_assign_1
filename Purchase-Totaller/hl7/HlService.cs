@@ -1,31 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Purchase_Totaller.hl7
 {
-    public class HlService
+    public class LocalService
     {
+        public readonly IPAddress Ip;
+        public readonly int Port;
         public readonly string Name;
+        public readonly string Tag;
+        public readonly int SecurityLevel;
+        public readonly string Description;
         public readonly List<ServiceArgument> Args;
-        public readonly ServiceReturn Return;
+        public readonly List<ServiceReturn> Returns;
 
-        public HlService(string name)
+        public LocalService(IPAddress ip, int port, string name, string tag, int securityLevel = 0, string description = "")
         {
+            this.Ip = ip;
+            this.Port = port;
             this.Name = name;
+            this.Tag = tag;
+            this.SecurityLevel = securityLevel;
+            this.Description = description;
             this.Args = new List<ServiceArgument>();
-            this.Return = new ServiceReturn();
+            this.Returns = new List<ServiceReturn>();
         }
     }
 
-    public class HlServiceCall
+    public class RemoteServiceCall
     {
         public readonly string Name;
         public readonly List<ServiceArgument> Args;
 
-        public HlServiceCall(string name)
+        public RemoteServiceCall(string name)
         {
             this.Name = name;
             Args = new List<ServiceArgument>();
@@ -36,7 +47,7 @@ namespace Purchase_Totaller.hl7
     {
         public int Position;
         public readonly string Name;
-        public readonly ServiceArgumentType dataType;
+        public readonly ServiceDataType dataType;
         public readonly bool Mandatory;
 
         public ServiceArgument(int position, string name, string dataType, bool mandatory = false) :
@@ -44,7 +55,7 @@ namespace Purchase_Totaller.hl7
         {
         }
 
-        public ServiceArgument(int position, string name, ServiceArgumentType dataType, bool mandatory = false)
+        public ServiceArgument(int position, string name, ServiceDataType dataType, bool mandatory = false)
         {
             this.Position = position;
             this.Name = name;
@@ -52,13 +63,18 @@ namespace Purchase_Totaller.hl7
             this.Mandatory = mandatory;
         }
 
-        public static ServiceArgumentType TypeFromString(string dataType)
+        public static ServiceDataType TypeFromString(string dataType)
         {
-            return (ServiceArgumentType)Enum.Parse(typeof(ServiceArgumentType), dataType.Substring(1));
+            return (ServiceDataType)Enum.Parse(typeof(ServiceDataType), dataType.Substring(1));
+        }
+
+        public static string TypeToString(ServiceDataType dataType)
+        {
+            return dataType.ToString().Replace("T", "");
         }
     }
 
-    public enum ServiceArgumentType
+    public enum ServiceDataType
     {
         Tint,
         Tdouble,
@@ -71,5 +87,15 @@ namespace Purchase_Totaller.hl7
 
     public class ServiceReturn
     {
+        public readonly int Position;
+        public readonly string Name;
+        public readonly ServiceDataType DataType;
+
+        public ServiceReturn(int pos, string name, ServiceDataType dataType)
+        {
+            this.Position = pos;
+            this.Name = name;
+            this.DataType = dataType;
+        }
     }
 }
