@@ -48,6 +48,7 @@
     <Compile Include="hl7\Request.cs" />
     <Compile Include="hl7\Response.cs" />
     <Compile Include="hl7\HlService.cs" />
+    <Compile Include="logic\PurchaseTotaller.cs" />
     <Compile Include="ui\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,9 +79,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="logic\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
