@@ -88,11 +88,11 @@ namespace tests
             var connection = new HlConnection("Bob");
             connection.Register();
 
-            var service = "test";
+            var service = "GIORP-TOTAL";
 
             var call = new RemoteServiceCall(service);
 
-            var position = 0;
+            var position = 1;
             var name = "test";
             var dataType = "int";
             call.Args.Add(new ServiceArgument(position, name, dataType));

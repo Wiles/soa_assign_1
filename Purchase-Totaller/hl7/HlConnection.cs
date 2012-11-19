@@ -98,7 +98,7 @@ namespace Purchase_Totaller.hl7
 
         public UnRegisterTeamResponse UnRegister()
         {
-            CheckRegistered();
+            EnforceRegistered();
             
             var response = IssueRequest(new UnRegisterTeamRequest(TeamName, (int)TeamId));
             if (response is UnRegisterTeamResponse)
@@ -114,7 +114,7 @@ namespace Purchase_Totaller.hl7
 
         public PublishServiceResponse Publish(LocalService service)
         {
-            CheckRegistered();
+            EnforceRegistered();
 
             var response = IssueRequest(new PublishServiceRequest(TeamName, (int)TeamId, service));
             if (response is PublishServiceResponse)
@@ -129,7 +129,7 @@ namespace Purchase_Totaller.hl7
 
         public QueryTeamResponse QueryTeam(string queryTeamName, int queryTeamId, string serviceTag)
         {
-            CheckRegistered();
+            EnforceRegistered();
 
             var response = IssueRequest(new QueryTeamRequest(TeamName, 
                 (int)TeamId, queryTeamName, queryTeamId, serviceTag));
@@ -145,7 +145,7 @@ namespace Purchase_Totaller.hl7
 
         public QueryServiceResponse QueryService(string serviceTag)
         {
-            CheckRegistered();
+            EnforceRegistered();
 
             var response = IssueRequest(new QueryServiceRequest(TeamName,
                 (int)TeamId, serviceTag));
@@ -161,7 +161,7 @@ namespace Purchase_Totaller.hl7
 
         public ExecuteServiceResponse ExecuteService(RemoteServiceCall call)
         {
-            CheckRegistered();
+            EnforceRegistered();
 
             var response = IssueRequest(new ExecuteServiceRequest(TeamName,
                 (int)TeamId, call));
@@ -182,7 +182,7 @@ namespace Purchase_Totaller.hl7
             return registered;
         }
 
-        private void CheckRegistered()
+        private void EnforceRegistered()
         {
             if (!IsRegistered())
             {

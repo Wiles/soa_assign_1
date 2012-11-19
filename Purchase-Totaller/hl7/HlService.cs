@@ -81,12 +81,12 @@ namespace Purchase_Totaller.hl7
 
         public static ServiceDataType TypeFromString(string dataType)
         {
-            return (ServiceDataType)Enum.Parse(typeof(ServiceDataType), dataType.Substring(1));
+            return (ServiceDataType)Enum.Parse(typeof(ServiceDataType), "T" + dataType.ToLower());
         }
 
         public static string TypeToString(ServiceDataType dataType)
         {
-            return dataType.ToString().Replace("T", "");
+            return dataType.ToString().Substring(1);
         }
     }
 
