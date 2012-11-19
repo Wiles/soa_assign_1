@@ -70,11 +70,11 @@ namespace Purchase_Totaller.hl7
             do
             {
                 byte[] recv = new byte[2048];
-                int count = socket.Receive(recv, recv.Length, SocketFlags.None);
+                socket.Receive(recv);
                 var receivedMessage = Encoding.ASCII.GetString(recv);
                 sb.Append(receivedMessage);
 
-            } while (sb.ToString().Last() != Request.EndMarker.ToCharArray()[0]);
+            } while (sb.ToString().Replace("\0", "").Last() != Request.EndMarker[0]);
 
             var fact = new ResponseFactory();
             var response = fact.FromMessage(request, sb.ToString());
