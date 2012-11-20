@@ -11,10 +11,16 @@ public class ServiceRequest {
     private String method;
     private Map<String, SoaParameter> params = new LinkedHashMap<String, SoaParameter>();
 
+    private String team;
+    private int teamId;
+
+
     public ServiceRequest(Message message) throws SoaException {
         try
         {
             method = message.get(1).get(2).get();
+            team = message.get(0).get(2).get();
+            teamId = Integer.parseInt(message.get(0).get(3).get());
             for(int i = 2; i < message.count(); ++i)
             {
                 if("ARG".equals(message.get(i).get(0).get()))
@@ -41,4 +47,12 @@ public class ServiceRequest {
         return params;
     }
 
+    public String getTeam() {
+        return team;
+    }
+
+    public int getTeamId()
+    {
+        return teamId;
+    }
 }

@@ -13,7 +13,7 @@ public class SoaException extends Exception {
     public static final int CONTENT_ERROR = -3;
     public static final int RUNTIME_ERROR = -4;
     public static final int SQL_ERROR = -5;
-    public static final int OTHER_ERROR = -6;
+    public static final int OTHER_ERROR = RUNTIME_ERROR;
 
     private String msg;
 
@@ -36,7 +36,7 @@ public class SoaException extends Exception {
     public SoaException(Throwable cause)
     {
         super(cause);
-        this.code = -6;
+        this.code = RUNTIME_ERROR;
         this.msg = cause.getMessage();
     }
 

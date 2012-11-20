@@ -1,11 +1,8 @@
 package ca.setc;
 
 import ca.setc.configuration.Config;
-import ca.setc.soa.ServiceLoader;
-import ca.setc.soa.SoaException;
-import ca.setc.soa.SoaRegistry;
+import ca.setc.soa.*;
 import ca.setc.service.SoaService;
-import ca.setc.soa.SoaSocketListener;
 import org.scannotation.ClasspathUrlFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +38,7 @@ public final class Main {
             URL[] urls = ClasspathUrlFinder.findClassPaths();
             Map<String, SoaService> services;
             services = ServiceLoader.loadServices(urls);
-
+            SoaLogger.header();
             String teamName = Config.get("team.name");
             String registryIp = Config.get("registry.ip");
             int registryPort = 0;
@@ -70,16 +67,18 @@ public final class Main {
 
             String serviceIp = Config.get("registry.ip");
 
-            SoaRegistry soa = null;
-            soa = new SoaRegistry(registryIp, registryPort);
+            SoaRegistry soa = SoaRegistry.getInstance();
+            soa.setIP(registryIp);
+            soa.setPort(registryPort);
+            soa.setTeamName(teamName);
 
-            Integer teamId = soa.registerTeam(teamName);
+            Integer teamId = soa.registerTeam();
 
             log.info("Team Id: {}", teamId);
 
             try
             {
-                soa.publishService(teamName, teamId, serviceIp, servicePort, services.get("PAYROLL"));
+                soa.publishService(serviceIp, Integer.parseInt(Config.get("service.publish.port")), services.get("PAYROLL"));
             }
             catch(SoaException ex)
             {

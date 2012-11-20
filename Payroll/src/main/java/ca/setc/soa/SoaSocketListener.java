@@ -1,5 +1,6 @@
 package ca.setc.soa;
 
+import ca.setc.configuration.Config;
 import ca.setc.hl7.Message;
 import ca.setc.hl7.ServiceRequest;
 import ca.setc.messaging.MessageBuilder;
@@ -27,7 +28,6 @@ public class SoaSocketListener extends Thread {
         this.socket = socket;
     }
 
-
     @Override
     public void run() {
         OutputStream writer = null;
@@ -50,15 +50,19 @@ public class SoaSocketListener extends Thread {
 
 
             Message request = new Message(sb.toString().getBytes("UTF-8"));
+            SoaLogger.receivedRequest(request);
+
             ServiceRequest sr = new ServiceRequest(request);
 
+            SoaRegistry.getInstance().queryTeam(sr.getTeam(), sr.getTeamId(), Config.get("Tag"));
 
             SoaService service = ServiceLoader.getService("PAYROLL");
             SoaMethod method = service.getMethod(sr.getMethod());
 
             Object answer = service.execute(sr.getMethod(), sr.getParameters());
-
-            writer.write(mb.response(answer, method.getReturnDescriptions(), method.getReturnType()).toHl7());
+            Message responseMessage = mb.response(answer, method.getReturnDescriptions(), method.getReturnType());
+            SoaLogger.respond(responseMessage);
+            writer.write(responseMessage.toHl7());
             writer.flush();
 
         } catch (SoaException e) {
@@ -67,7 +71,9 @@ public class SoaSocketListener extends Thread {
             {
                 try
                 {
-                    writer.write(mb.error(e).toHl7());
+                    Message m = mb.error(e);
+                    SoaLogger.respond(m);
+                    writer.write(m.toHl7());
                     writer.flush();
                 }
                 catch(IOException ex)
@@ -82,7 +88,9 @@ public class SoaSocketListener extends Thread {
             {
                 try
                 {
-                    writer.write(mb.error(new SoaException(e)).toHl7());
+                    Message m = mb.error(new SoaException(e));
+                    SoaLogger.respond(m);
+                    writer.write(m.toHl7());
                     writer.flush();
                 }
                 catch(IOException ex)
@@ -101,7 +109,7 @@ public class SoaSocketListener extends Thread {
                 }
                 catch(IOException ignore)
                 {
-                    //ignore5
+                    //ignore
                 }
             }
             if(writer != null)

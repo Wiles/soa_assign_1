@@ -3,6 +3,7 @@ package ca.setc.services;
 import ca.setc.annotations.MethodAnno;
 import ca.setc.annotations.ParameterAnno;
 import ca.setc.annotations.ServiceAnno;
+import ca.setc.soa.SoaException;
 
 /**
  * Payroll calculator service
@@ -38,7 +39,7 @@ public final class Payroll {
             @ParameterAnno(required = false, name = "seasonal")
             Double seasonal,
             @ParameterAnno(required = false, name = "contract")
-            Integer contractWeeks) {
+            Integer contractWeeks) throws SoaException {
         if ("HOUR".equals(employeeType)) {
             if (hoursWorked <= WORK_WEEK_HOURS) {
                 return hoursWorked * rate;
@@ -57,6 +58,6 @@ public final class Payroll {
             return rate / contractWeeks;
         }
 
-        return 0.0;
+        throw new SoaException(SoaException.RUNTIME_ERROR, "Unknown Employee type");
     }
 }

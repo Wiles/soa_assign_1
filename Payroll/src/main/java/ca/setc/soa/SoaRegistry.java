@@ -13,16 +13,40 @@ import java.net.Socket;
 public class SoaRegistry {
 
     private String ip;
+    private int teamId;
+    private String teamName;
     private int port;
     private MessageBuilder mb = new MessageBuilder();
 
-    public SoaRegistry(String ip, int port) throws SoaException {
+    private static SoaRegistry instance;
+
+    private SoaRegistry(){}
+
+    public void setIP(String ip)
+    {
         this.ip = ip;
+    }
+
+    public void setPort(int port)
+    {
         this.port = port;
     }
 
-    public int registerTeam(String teamName) throws SoaException {
-        int teamId;
+    public void setTeamName(String teamName)
+    {
+        this.teamName = teamName;
+    }
+
+    public static SoaRegistry getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new SoaRegistry();
+        }
+        return instance;
+    }
+
+    public int registerTeam() throws SoaException {
 
         Message response = sendMessage(mb.registerTeam(teamName));
         try
@@ -33,15 +57,34 @@ public class SoaRegistry {
         {
             throw new SoaException(ex);
         }
+
         return teamId;
     }
 
-    public void publishService(String teamName, int teamId, String ip, int port, SoaService service) throws SoaException
+    public void publishService(String ip, int port, SoaService service) throws SoaException
     {
         sendMessage(mb.publishService(teamName, teamId, ip, port, service));
     }
 
-    private Message sendMessage(Message message) throws SoaException {
+    /**
+     * Check if a team is authorized to use the service.
+     *
+     * Throws an exception if they are not.
+     *
+     * @param queryTeam
+     * @param queryId
+     * @param serviceName
+     * @throws SoaException
+     */
+    public void queryTeam(String queryTeam, int queryId, String serviceName) throws SoaException {
+        Message response = sendMessage(mb.queryTeam(teamName, teamId, queryTeam, queryId, serviceName));
+        if("NOT-OK".equals(response.get(0).get(1)))
+        {
+            throw new SoaException(Integer.parseInt(response.get(0).get(2).get()), response.get(0).get(3).get());
+        }
+    }
+
+    private synchronized Message sendMessage(Message message) throws SoaException {
         Socket sock = null;
         OutputStream writer = null;
         BufferedReader reader = null;
@@ -62,7 +105,7 @@ public class SoaRegistry {
             }
 
             Message responseMessage = new Message(sb.toString().getBytes("UTF-8"));
-
+            SoaLogger.sentServiceRequest(message, responseMessage);
             if(responseMessage.get(0).get(1).get().equals("NOT-OK"))
             {
                 throw new SoaException(
