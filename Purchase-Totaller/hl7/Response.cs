@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,31 +31,46 @@ namespace Purchase_Totaller.hl7
 
     public class QueryServiceResponse : Response
     {
+        public readonly LocalService Service;
+        public QueryServiceResponse(LocalService service)
+        {
+            this.Service = service;
+        }
     }
 
     public class ExecuteServiceResponse : Response
     {
+        private RemoteServiceReturn Returned;
+
+        public ExecuteServiceResponse(RemoteServiceReturn returned)
+        {
+            this.Returned = returned;
+        }
     }
 
     public class FailureResponse : Response
     {
+        public readonly string ErrorCode;
+        public readonly string ErrorMessage;
         public readonly FailureResponseException Exception;
         public FailureResponse(string errorCode, string errorMessage)
         {
+            this.ErrorCode = errorCode;
+            this.ErrorMessage = errorMessage;
             this.Exception = new FailureResponseException(errorCode, errorMessage);
-        }
-
-        public FailureResponse(FailureResponseException exception)
-        {
-            this.Exception = exception;
         }
     }
 
     public class FailureResponseException : Exception
     {
+        public FailureResponseException(FailureResponse response) 
+            : base(String.Format("Error: {0}, because {1}", response.ErrorCode, response.ErrorMessage))
+        {
+
+        }
+
         public FailureResponseException(string errorCode, string errorMessage, Exception e = null)
-            : base
-                (String.Format("Error: {0}, because {1}", errorCode, errorMessage), e)
+            : base(String.Format("Error: {0}, because {1}", errorCode, errorMessage), e)
         {
         }
     }
@@ -158,91 +174,120 @@ namespace Purchase_Totaller.hl7
             {
                 var fullRequest = (QueryTeamRequest)request;
                 var response = new QueryTeamResponse();
+                // TODO: Query Team Response
                 return response;
             }
             else if (request is PublishServiceRequest)
             {
-                var fullRequest = (QueryTeamRequest)request;
-                var response = new QueryTeamResponse();
+                var fullRequest = (PublishServiceRequest)request;
+                var response = new PublishServiceResponse();
                 return response;
             }
             else if (request is QueryServiceRequest)
             {
                 var fullRequest = (QueryServiceRequest)request;
-                var response = new QueryServiceResponse();
 
-                try
+                var numSegments = int.Parse(rows[0][4]);
+                var serviceName = rows[1][2];
+                var numArgs = int.Parse(rows[1][4]);
+                var numResponses = int.Parse(rows[1][5]);
+
+                var mchIndex = 2 + numArgs + numResponses;
+                var ip = rows[mchIndex][1];
+                var port = int.Parse(rows[mchIndex][2]);
+                var service = new LocalService(IPAddress.Parse(ip), port, serviceName, fullRequest.TagName);
+
+                var response = new QueryServiceResponse(service);
+                // Read the args
+                for (int i = 0; i < numArgs; i++)
                 {
-                    var numSegments = int.Parse(rows[0][4]);
+                    var arg = 2 + i;
+                    var row = rows[arg];
 
-
-                }
-                catch (Exception)
-                {
+                    var pos = int.Parse(row[1]);
+                    var argName = row[2];
+                    var dataType = ServiceArgument.TypeFromString(row[3]);
+                    var mandatory = false;
                     
-                    throw;
+                    try 
+	                {
+                        // Optional
+		                mandatory = row[4].Equals("mandatory", StringComparison.CurrentCultureIgnoreCase);
+	                }
+	                catch (Exception)
+	                {
+		                // Ignore...
+	                }
+
+                    service.Args.Add(new ServiceArgument(pos, argName, dataType, mandatory));
                 }
+
+                // Read the responses
+                for (int i = 0; i < numResponses; i++)
+			    {
+                    var resp = 2 + i + numArgs;
+			        var row = rows[resp];
+                    
+                    var pos = int.Parse(row[1]);
+                    var respName = row[2];
+                    var dataType = ServiceArgument.TypeFromString(row[3]);
+
+                    service.Returns.Add(new ServiceReturn(pos, respName, dataType));
+			    }
 
                 return response;
             }
             else if (request is ExecuteServiceRequest)
             {
                 var fullRequest = (ExecuteServiceRequest)request;
-                var response = new ExecuteServiceResponse();
 
-                try
-                {
-                    var numSegments = int.Parse(rows[0][4]);
-                    var name = rows[1][2];
-                    var numArgs = int.Parse(rows[1][4]);
-                    var numResponses = int.Parse(rows[1][5]);
+                var numSegments = int.Parse(rows[0][4]);
+                var name = rows[1][2];
+                var numArgs = int.Parse(rows[1][4]);
+                var numResponses = int.Parse(rows[1][5]);
                     
-                    var call = new RemoteServiceCall(name);
+                var returnedCall = new RemoteServiceReturn(name);
 
-                    for (int arg = 0; arg < numArgs; arg++)
-                    {
-                        var row = rows[1 + arg];
-                        Debug.Assert(row[0] == "ARG");
-
-                        var pos = int.Parse(row[1]);
-                        var argName = row[2];
-                        var dataType = row[3];
-                        bool? mandatory = null;
-
-                        try 
-	                    {
-                            // This is optional
-		                    mandatory = bool.Parse(row[4]);
-	                    }
-	                    catch (Exception)
-	                    {
-                            // Ignore..
-	                    }
-
-                        var serviceArgument = new ServiceArgument(pos, argName, dataType, 
-                            ((mandatory == null) ? false : (bool)mandatory));
-                        call.Args.Add(serviceArgument);
-                    }
-
-
-                    for (int resp = 0; resp < numResponses; resp++)
-                    {
-                        var row = rows[1 + numArgs + resp];
-                        Debug.Assert(row[0] == "RSP");
-
-                        var pos = int.Parse(row[1]);
-                        var argName = row[2];
-                        var dataType = row[3];
-
-
-                    }
-                }
-                catch (Exception)
+                for (int arg = 0; arg < numArgs; arg++)
                 {
+                    var row = rows[1 + arg];
+                    Debug.Assert(row[0] == "ARG");
 
-                    throw;
+                    var pos = int.Parse(row[1]);
+                    var argName = row[2];
+                    var dataType = row[3];
+                    bool? mandatory = null;
+
+                    try 
+	                {
+                        // This is optional
+		                mandatory = row[4].Equals("mandatory", StringComparison.CurrentCultureIgnoreCase);
+	                }
+	                catch (Exception)
+	                {
+                        // Ignore..
+	                }
+
+                    var serviceArgument = new ServiceArgument(pos, argName, dataType, 
+                        ((mandatory == null) ? false : (bool)mandatory));
+                    returnedCall.Args.Add(serviceArgument);
                 }
 
+
+                for (int resp = 0; resp < numResponses; resp++)
+                {
+                    var row = rows[1 + numArgs + resp];
+                    Debug.Assert(row[0] == "RSP");
+
+                    var pos = int.Parse(row[1]);
+                    var argName = row[2];
+                    var dataType = row[3];
+
+                    var serviceReturn = new ServiceReturn(pos, argName, ServiceArgument.TypeFromString(dataType));
+                    returnedCall.Returns.Add(serviceReturn);
+                }
+
+                var response = new ExecuteServiceResponse(returnedCall);
                 return response;
             }
             else

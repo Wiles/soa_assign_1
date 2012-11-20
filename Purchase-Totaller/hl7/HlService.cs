@@ -18,7 +18,7 @@ namespace Purchase_Totaller.hl7
         public readonly List<ServiceArgument> Args;
         public readonly List<ServiceReturn> Returns;
 
-        public LocalService(IPAddress ip, int port, string name, string tag, int securityLevel = 0, string description = "")
+        public LocalService(IPAddress ip, int port, string name, string tag, int securityLevel = 1, string description = "")
         {
             this.Ip = ip;
             this.Port = port;
@@ -33,13 +33,27 @@ namespace Purchase_Totaller.hl7
 
     public class RemoteServiceCall
     {
-        public readonly string Name;
+        public readonly string ServiceName;
         public readonly List<ServiceArgument> Args;
 
-        public RemoteServiceCall(string name)
+        public RemoteServiceCall(string serviceName)
+        {
+            this.ServiceName = serviceName;
+            Args = new List<ServiceArgument>();
+        }
+    }
+
+    public class RemoteServiceReturn
+    {
+        public readonly string Name;
+        public readonly List<ServiceArgument> Args;
+        public readonly List<ServiceReturn> Returns;
+
+        public RemoteServiceReturn(string name)
         {
             this.Name = name;
-            Args = new List<ServiceArgument>();
+            this.Args = new List<ServiceArgument>();
+            this.Returns = new List<ServiceReturn>();
         }
     }
 
@@ -49,6 +63,8 @@ namespace Purchase_Totaller.hl7
         public readonly string Name;
         public readonly ServiceDataType dataType;
         public readonly bool Mandatory;
+
+        public string Value;
 
         public ServiceArgument(int position, string name, string dataType, bool mandatory = false) :
             this(position, name, TypeFromString(dataType), mandatory)
@@ -65,12 +81,12 @@ namespace Purchase_Totaller.hl7
 
         public static ServiceDataType TypeFromString(string dataType)
         {
-            return (ServiceDataType)Enum.Parse(typeof(ServiceDataType), dataType.Substring(1));
+            return (ServiceDataType)Enum.Parse(typeof(ServiceDataType), "T" + dataType.ToLower());
         }
 
         public static string TypeToString(ServiceDataType dataType)
         {
-            return dataType.ToString().Replace("T", "");
+            return dataType.ToString().Substring(1);
         }
     }
 

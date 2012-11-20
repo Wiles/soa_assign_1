@@ -14,7 +14,15 @@ namespace tests
             var connection = new HlConnection("Bob");
             connection.Register();
 
-            var service = new LocalService(IPAddress.Parse("127.0.0.1"), 5453, "Service", "ServiceTag", 0, "Bob description");
+            var service = new LocalService(IPAddress.Parse("127.0.0.1"), 5453,
+                "Service", "GIORP-TOTAL", 1, "Bob description");
+
+            var arg = new ServiceArgument(1, "x", ServiceDataType.Tstring, true);
+            service.Args.Add(arg);
+
+            var ret = new ServiceReturn(1, "Bob", ServiceDataType.Tstring);
+            service.Returns.Add(ret);
+
             connection.Publish(service);
         }
 
@@ -49,19 +57,20 @@ namespace tests
             var connection = new HlConnection(teamname);
             int teamId = connection.Register().TeamId;
 
-            var servicename = "Service1";
-            var servicetag = "ServiceTag1";
+            var serviceName = "Service1";
+            var serviceTag = "GIORP-TOTAL";
 
-            var service = new LocalService(IPAddress.Parse("127.0.0.1"), 5453, servicename, servicetag, 0, "Bob description");
-            var arg = new ServiceArgument(0, "Name", ServiceDataType.Tstring, true);
+            var service = new LocalService(IPAddress.Parse("127.0.0.1"), 5453, 
+                serviceName, serviceTag, 1, "Bob description");
+            var arg = new ServiceArgument(1, "Name", ServiceDataType.Tstring, true);
             service.Args.Add(arg);
 
-            var ret = new ServiceReturn(0, "TotalCount", ServiceDataType.Tint);
+            var ret = new ServiceReturn(1, "TotalCount", ServiceDataType.Tint);
             service.Returns.Add(ret);
 
             connection.Publish(service);
 
-            connection.QueryTeam(teamname, teamId, servicetag);
+            connection.QueryTeam(teamname, teamId, serviceTag);
         }
 
         [TestMethod]
@@ -70,7 +79,7 @@ namespace tests
             var connection = new HlConnection("Bob");
             connection.Register();
 
-            connection.QueryService("Service1");
+            connection.QueryService("GIORP-TOTAL");
         }
 
         [TestMethod]
@@ -79,11 +88,11 @@ namespace tests
             var connection = new HlConnection("Bob");
             connection.Register();
 
-            var service = "test";
+            var service = "GIORP-TOTAL";
 
             var call = new RemoteServiceCall(service);
 
-            var position = 0;
+            var position = 1;
             var name = "test";
             var dataType = "int";
             call.Args.Add(new ServiceArgument(position, name, dataType));

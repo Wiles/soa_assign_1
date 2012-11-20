@@ -12,6 +12,7 @@ namespace Purchase_Totaller.hl7
         public readonly static string NewRow = ((char)13).ToString();
         public readonly static string BeginMarker = ((char)11).ToString();
         public readonly static string EndMarker = ((char)28).ToString();
+        public readonly static string EndOfMessage = new string(new char[] {((char)28), ((char)13), ((char)10)});
 
         public readonly string Id;
         public readonly string TeamName;
@@ -100,7 +101,7 @@ namespace Purchase_Totaller.hl7
                 Contents.Add(arg.Position.ToString());
                 Contents.Add(arg.Name);
                 Contents.Add(ServiceArgument.TypeToString(arg.dataType));
-                Contents.Add(arg.Mandatory.ToString());
+                Contents.Add(arg.Mandatory ? "mandatory" : "optional");
                 Contents.Add(NewRow);
             }
 
@@ -122,11 +123,19 @@ namespace Purchase_Totaller.hl7
 
     public class QueryServiceRequest : Request
     {
+        public readonly string TagName;
         public QueryServiceRequest(string teamName, int teamId, string tagName): 
             base("QUERY-SERVICE", teamName, teamId.ToString())
         {
+            this.TagName = tagName;
+
             Contents.Add("SRV");
             Contents.Add(tagName);
+            Contents.Add("");
+            Contents.Add("");
+            Contents.Add("");
+            Contents.Add("");
+            Contents.Add("");
             Contents.Add(NewRow);
         }
     }
@@ -135,6 +144,31 @@ namespace Purchase_Totaller.hl7
     {
         public ExecuteServiceRequest(string teamName, int teamId, RemoteServiceCall call):
             base("EXEC-SERVICE", teamName, teamId.ToString())
+        {
+            Contents.Add("SRV");
+            Contents.Add("");
+            Contents.Add(call.ServiceName);
+            Contents.Add("");
+            Contents.Add(call.Args.Count.ToString());
+            Contents.Add("");
+            Contents.Add("");
+            Contents.Add("");
+            Contents.Add(NewRow);
+
+            for (int i = 0; i < call.Args.Count; i++)
+			{
+                var arg = call.Args[i];
+                Contents.Add("ARG");
+                Contents.Add(arg.Position.ToString());
+                Contents.Add(arg.Name);
+                Contents.Add(ServiceArgument.TypeToString(arg.dataType));
+                Contents.Add("");
+                Contents.Add(arg.Value);
+                Contents.Add(NewRow);
+			}
+        }
+
+        public static ExecuteServiceRequest FromMessage(string received)
         {
             throw new NotImplementedException();
         }
