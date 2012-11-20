@@ -16,12 +16,12 @@ public class SoaRegistry {
     private int port;
     private MessageBuilder mb = new MessageBuilder();
 
-    public SoaRegistry(String ip, int port) throws SoaRegistryException {
+    public SoaRegistry(String ip, int port) throws SoaException {
         this.ip = ip;
         this.port = port;
     }
 
-    public int registerTeam(String teamName) throws SoaRegistryException {
+    public int registerTeam(String teamName) throws SoaException {
         int teamId;
 
         Message response = sendMessage(mb.registerTeam(teamName));
@@ -31,17 +31,17 @@ public class SoaRegistry {
         }
         catch(NumberFormatException ex)
         {
-            throw new SoaRegistryException(ex);
+            throw new SoaException(ex);
         }
         return teamId;
     }
 
-    public void publishService(String teamName, int teamId, String ip, int port, SoaService service) throws SoaRegistryException
+    public void publishService(String teamName, int teamId, String ip, int port, SoaService service) throws SoaException
     {
         sendMessage(mb.publishService(teamName, teamId, ip, port, service));
     }
 
-    private Message sendMessage(Message message) throws SoaRegistryException {
+    private Message sendMessage(Message message) throws SoaException {
         Socket sock = null;
         OutputStream writer = null;
         BufferedReader reader = null;
@@ -65,7 +65,7 @@ public class SoaRegistry {
 
             if(responseMessage.get(0).get(1).get().equals("NOT-OK"))
             {
-                throw new SoaRegistryException(
+                throw new SoaException(
                         Integer.parseInt(responseMessage.get(0).get(2).get()),
                         responseMessage.get(0).get(3).get()
                 );
@@ -75,7 +75,7 @@ public class SoaRegistry {
         }
         catch(Exception e)
         {
-            throw new SoaRegistryException(e);
+            throw new SoaException(e);
         }
         finally
         {

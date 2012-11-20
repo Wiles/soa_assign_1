@@ -4,7 +4,7 @@
 	<entry key="team.name">Blotto</entry>
 	<entry key="team.members">Samuel L, Hekar K</entry>
 	<entry key="service.port">5000</entry>
-	<entry key="service.ip">192.168.1.106</entry>
-	<entry key="registry.ip">localhost</entry>
+	<entry key="service.ip">127.0.0.1</entry>
+	<entry key="registry.ip">127.0.0.1</entry>
 	<entry key="registry.port">3128</entry>
 </properties>

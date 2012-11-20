@@ -2,9 +2,9 @@ package ca.setc.service;
 
 import ca.setc.annotations.MethodAnno;
 import ca.setc.annotations.ServiceAnno;
+import ca.setc.soa.SoaException;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -74,26 +74,50 @@ public class SoaService {
         return this.description;
     }
 
+    public Object execute(String methodName, Map<String, SoaParameter> params) throws SoaException {
+        SoaMethod method = methods.get(methodName);
+        String[] parameters = new String[method.getParameters().size()];
+
+        for(Integer i = 0; i < params.size(); ++i)
+        {
+            String key = String.format("%d", i + 1);
+            SoaParameter sent = params.get(key);
+            SoaParameter needed = method.getParameters().get(i);
+            if(sent == null && needed.isRequired())
+            {
+                throw new SoaException(SoaException.CONTENT_ERROR, "Required parameter not supplied");
+            }
+            else
+            {
+                if(!sent.getName().equals(needed.getName()))
+                {
+                    throw new SoaException(SoaException.CONTENT_ERROR, "Parameter name mismatch");
+                }
+                else
+                {
+                    parameters[i] = sent.getValue();
+                }
+
+            }
+        }
+        return execute(methodName, parameters);
+    }
+
     /**
      * Executes a method against the service
      * @param methodName
      * @param params
      * @return the return value of the method called
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
-     * @throws InvocationTargetException
      */
-    public Object execute(String methodName, String[] params) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public Object execute(String methodName, String[] params) throws SoaException {
         SoaMethod meth = methods.get(methodName);
         List<Object> paramList = new LinkedList<Object>();
         if (meth == null) {
-            //TODO
-            throw new IllegalArgumentException();
+            throw new SoaException(SoaException.CONTENT_ERROR, "Insufficient parameters");
         }
 
         if (params.length != meth.getParameters().size()) {
-            //TODO
-            throw new IllegalArgumentException();
+            throw new SoaException(SoaException.CONTENT_ERROR, "Insufficient parameters");
         }
 
         for (int i = 0; i < params.length; ++i) {
@@ -116,13 +140,19 @@ public class SoaService {
                 throw new IllegalArgumentException("Cannot parse parameters of type" + param.getType());
             }
         }
+        try
+        {
+            Method method = c.getMethod(meth.getMethodName(), meth.getTypes());
 
-        Method method = c.getMethod(meth.getMethodName(), meth.getTypes());
+            Object o = method.invoke(null, paramList.toArray(new Object[paramList.size()]));
 
-        Object o = method.invoke(null, paramList.toArray(new Object[paramList.size()]));
-
-        Class<?> methodReturn = method.getReturnType();
-        return methodReturn.cast(o);
+            Class<?> methodReturn = method.getReturnType();
+            return methodReturn.cast(o);
+        }
+        catch(Exception e)
+        {
+            throw new SoaException(e);
+        }
 
     }
 
@@ -141,5 +171,10 @@ public class SoaService {
     public List<SoaMethod> getMethods()
     {
         return new ArrayList<SoaMethod>(this.methods.values());
+    }
+
+    public SoaMethod getMethod(String name)
+    {
+        return this.methods.get(name);
     }
 }

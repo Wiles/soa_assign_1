@@ -110,4 +110,13 @@ public class Message {
         }
         return wr.toByteArray();
     }
+
+    /**
+     * number of segments in the message
+     * @return
+     */
+    public int count()
+    {
+        return segments.size();
+    }
 }

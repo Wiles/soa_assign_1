@@ -7,6 +7,7 @@ import org.scannotation.AnnotationDB;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 public final class ServiceLoader {
 
     private ServiceLoader(){}
+    private static Map<String, SoaService> services = new LinkedHashMap<String, SoaService>();
 
     /**
      * Parses in services based on annotation
@@ -25,7 +27,7 @@ public final class ServiceLoader {
      * @throws ClassNotFoundException
      */
     public static Map<String, SoaService> loadServices(URL[] classpath) throws IOException, ClassNotFoundException {
-        Map<String, SoaService> services = new HashMap<String, SoaService>();
+        services = new HashMap<String, SoaService>();
         AnnotationDB db = new AnnotationDB();
         db.scanArchives(classpath);
         Set<String> entityClasses = db.getAnnotationIndex().get(ServiceAnno.class.getName());
@@ -34,6 +36,14 @@ public final class ServiceLoader {
             SoaService soaService = new SoaService(name);
             services.put(soaService.getName(), soaService);
         }
+
         return services;
     }
+
+    public static SoaService getService(String name)
+    {
+        return services.get(name);
+    }
+
+
 }

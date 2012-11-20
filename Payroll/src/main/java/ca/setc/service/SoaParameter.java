@@ -7,6 +7,8 @@ public class SoaParameter {
     private boolean required;
     private Class<?> type;
     private String name;
+    private String value;
+    private String sType;
 
     /**
      * Constructor
@@ -18,6 +20,13 @@ public class SoaParameter {
         this.required = required;
         this.type = type;
         this.name = name;
+    }
+
+    public SoaParameter(String name, String type, String value)
+    {
+        sType = type.toLowerCase();
+        this.name = name;
+        this.value = value;
     }
 
     /**
@@ -42,5 +51,10 @@ public class SoaParameter {
      */
     public String getName() {
         return name;
+    }
+
+    public String getValue()
+    {
+        return value;
     }
 }

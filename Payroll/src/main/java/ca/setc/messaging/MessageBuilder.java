@@ -6,6 +6,7 @@ import ca.setc.hl7.Segment;
 import ca.setc.service.SoaMethod;
 import ca.setc.service.SoaParameter;
 import ca.setc.service.SoaService;
+import ca.setc.soa.SoaException;
 
 import java.util.List;
 
@@ -197,6 +198,59 @@ public class MessageBuilder {
         segment.add(new Field(""));
         segment.add(new Field(""));
         message.add(segment);
+
+        return message;
+    }
+
+    public Message error(SoaException e)
+    {
+        Message message = new Message();
+
+        Segment segment = new Segment();
+
+        segment.add(new Field("SOA"));
+        segment.add(new Field("NOT-OK"));
+        segment.add(new Field(e.getCode()));
+        segment.add(new Field(e.getMessage()));
+        segment.add(new Field(""));
+        message.add(segment);
+
+        return message;
+    }
+
+    public Message response(Object answer, String[] returnDescription, Class<?> returnType)
+    {
+        Message message = new Message();
+
+        Segment segment = new Segment();
+
+        segment.add(new Field("PUB"));
+        segment.add(new Field("OK"));
+        segment.add(new Field(""));
+        segment.add(new Field(""));
+        segment.add(new Field(1));
+        message.add(segment);
+        Object[] returns;
+        if(returnDescription.length > 1)
+        {
+            returns = (Object[])answer;
+        }
+        else
+        {
+            returns = new Object[]{answer};
+        }
+
+        for(int i = 0; i < returnDescription.length; ++i)
+        {
+            segment = new Segment();
+
+            segment.add(new Field("RSP"));
+            segment.add(new Field(i + 1));
+            segment.add(new Field(returnDescription[i]));
+            segment.add(new Field(prettyTypeName(returnType)));
+            segment.add(new Field(answer.toString()));
+            message.add(segment);
+        }
 
         return message;
     }

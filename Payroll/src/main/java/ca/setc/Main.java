@@ -2,8 +2,8 @@ package ca.setc;
 
 import ca.setc.configuration.Config;
 import ca.setc.soa.ServiceLoader;
+import ca.setc.soa.SoaException;
 import ca.setc.soa.SoaRegistry;
-import ca.setc.soa.SoaRegistryException;
 import ca.setc.service.SoaService;
 import ca.setc.soa.SoaSocketListener;
 import org.scannotation.ClasspathUrlFinder;
@@ -35,7 +35,7 @@ public final class Main {
      * @throws NoSuchMethodException
      * @throws IllegalAccessException
      */
-    public static void main(String[] args) throws ClassNotFoundException, IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, SoaRegistryException {
+    public static void main(String[] args) throws ClassNotFoundException, IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, SoaException {
         try
         {
             URL[] urls = ClasspathUrlFinder.findClassPaths();
@@ -73,12 +73,15 @@ public final class Main {
             SoaRegistry soa = null;
             soa = new SoaRegistry(registryIp, registryPort);
 
-            int teamId = soa.registerTeam(teamName);
+            Integer teamId = soa.registerTeam(teamName);
+
+            log.info("Team Id: {}", teamId);
+
             try
             {
                 soa.publishService(teamName, teamId, serviceIp, servicePort, services.get("PAYROLL"));
             }
-            catch(SoaRegistryException ex)
+            catch(SoaException ex)
             {
                 if(!ex.getErrorMessage().equals("Team '"+teamName+"' (ID : "+teamId+") has already published service PAYROLL"))
                 {
