@@ -27,7 +27,6 @@ public class SoaSocketListener extends Thread {
         this.socket = socket;
     }
 
-
     @Override
     public void run() {
         OutputStream writer = null;
@@ -105,7 +104,7 @@ public class SoaSocketListener extends Thread {
                 }
                 catch(IOException ignore)
                 {
-                    //ignore5
+                    //ignore
                 }
             }
             if(writer != null)

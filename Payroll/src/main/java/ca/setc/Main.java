@@ -78,7 +78,7 @@ public final class Main {
 
             try
             {
-                soa.publishService(serviceIp, servicePort, services.get("PAYROLL"));
+                soa.publishService(serviceIp, Integer.parseInt(Config.get("service.publish.port")), services.get("PAYROLL"));
             }
             catch(SoaException ex)
             {

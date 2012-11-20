@@ -30,8 +30,8 @@ public class SoaLogger {
                 pw.println(String.format("%s Team    : Blotto (%s)",
                         date(),
                         Config.get("team.members")));
-                pw.println(String.format("%s %s", date(), "Tag-Name: PAYROLL"));
-                pw.println(String.format("%s %s", date(), "Service : payCheckMaker"));
+                pw.println(String.format("%s Tag-Name: %s", date(), Config.get("Tag")));
+                pw.println(String.format("%s Service : %s", date(), Config.get("Service")));
                 pw.println(String.format("%s %s", date(), "======================================================="));
             }
             catch(Exception ex)
