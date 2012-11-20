@@ -1,5 +1,6 @@
 package ca.setc.soa;
 
+import ca.setc.configuration.Config;
 import ca.setc.hl7.Message;
 import ca.setc.hl7.ServiceRequest;
 import ca.setc.messaging.MessageBuilder;
@@ -49,11 +50,11 @@ public class SoaSocketListener extends Thread {
 
 
             Message request = new Message(sb.toString().getBytes("UTF-8"));
-
             SoaLogger.receivedRequest(request);
 
             ServiceRequest sr = new ServiceRequest(request);
 
+            SoaRegistry.getInstance().queryTeam(sr.getTeam(), sr.getTeamId(), Config.get("Tag"));
 
             SoaService service = ServiceLoader.getService("PAYROLL");
             SoaMethod method = service.getMethod(sr.getMethod());
@@ -70,7 +71,9 @@ public class SoaSocketListener extends Thread {
             {
                 try
                 {
-                    writer.write(mb.error(e).toHl7());
+                    Message m = mb.error(e);
+                    SoaLogger.respond(m);
+                    writer.write(m.toHl7());
                     writer.flush();
                 }
                 catch(IOException ex)
@@ -85,7 +88,9 @@ public class SoaSocketListener extends Thread {
             {
                 try
                 {
-                    writer.write(mb.error(new SoaException(e)).toHl7());
+                    Message m = mb.error(new SoaException(e));
+                    SoaLogger.respond(m);
+                    writer.write(m.toHl7());
                     writer.flush();
                 }
                 catch(IOException ex)
