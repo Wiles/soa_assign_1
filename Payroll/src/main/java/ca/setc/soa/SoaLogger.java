@@ -31,7 +31,7 @@ public class SoaLogger {
                         date(),
                         Config.get("team.members")));
                 pw.println(String.format("%s Tag-Name: %s", date(), Config.get("Tag")));
-                pw.println(String.format("%s Service : %s", date(), Config.get("Service")));
+                pw.println(String.format("%s Service : %s", date(), Config.get("service")));
                 pw.println(String.format("%s %s", date(), "======================================================="));
             }
             catch(Exception ex)
