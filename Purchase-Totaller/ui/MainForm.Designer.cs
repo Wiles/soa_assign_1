@@ -37,6 +37,13 @@
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.argGrid = new System.Windows.Forms.DataGridView();
             this.respGrid = new System.Windows.Forms.DataGridView();
+            this.RespName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RespType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RespValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArgName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArgType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArgMandatory = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArgValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -120,6 +127,11 @@
             this.argGrid.AllowUserToAddRows = false;
             this.argGrid.AllowUserToDeleteRows = false;
             this.argGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.argGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ArgName,
+            this.ArgType,
+            this.ArgMandatory,
+            this.ArgValue});
             this.argGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.argGrid.Location = new System.Drawing.Point(0, 0);
             this.argGrid.Name = "argGrid";
@@ -132,6 +144,10 @@
             this.respGrid.AllowUserToAddRows = false;
             this.respGrid.AllowUserToDeleteRows = false;
             this.respGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.respGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.RespName,
+            this.RespType,
+            this.RespValue});
             this.respGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.respGrid.Location = new System.Drawing.Point(0, 0);
             this.respGrid.Name = "respGrid";
@@ -139,6 +155,46 @@
             this.respGrid.RowTemplate.Height = 24;
             this.respGrid.Size = new System.Drawing.Size(930, 346);
             this.respGrid.TabIndex = 0;
+            // 
+            // RespName
+            // 
+            this.RespName.HeaderText = "Name";
+            this.RespName.Name = "RespName";
+            this.RespName.ReadOnly = true;
+            // 
+            // RespType
+            // 
+            this.RespType.HeaderText = "Type";
+            this.RespType.Name = "RespType";
+            this.RespType.ReadOnly = true;
+            // 
+            // RespValue
+            // 
+            this.RespValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.RespValue.HeaderText = "Value";
+            this.RespValue.Name = "RespValue";
+            this.RespValue.ReadOnly = true;
+            // 
+            // ArgName
+            // 
+            this.ArgName.HeaderText = "Name";
+            this.ArgName.Name = "ArgName";
+            // 
+            // ArgType
+            // 
+            this.ArgType.HeaderText = "Type";
+            this.ArgType.Name = "ArgType";
+            // 
+            // ArgMandatory
+            // 
+            this.ArgMandatory.HeaderText = "Mandatory";
+            this.ArgMandatory.Name = "ArgMandatory";
+            // 
+            // ArgValue
+            // 
+            this.ArgValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ArgValue.HeaderText = "Value";
+            this.ArgValue.Name = "ArgValue";
             // 
             // MainForm
             // 
@@ -175,6 +231,13 @@
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.DataGridView argGrid;
         private System.Windows.Forms.DataGridView respGrid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RespName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RespType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn RespValue;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ArgName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ArgType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ArgMandatory;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ArgValue;
     }
 }
 

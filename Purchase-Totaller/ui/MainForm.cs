@@ -51,7 +51,7 @@ namespace Purchase_Totaller
                     {
                         runToolStripMenuItem1.Enabled = true;
 
-                        queriedService = connection.QueryService(serviceTag);
+                        queriedService = connection.QueryService(serviceTag).Service;
                     }
                     else
                     {
