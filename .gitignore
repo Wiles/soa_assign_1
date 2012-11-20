@@ -9,6 +9,7 @@ dependency-reduced-pom.xml
 log/*
 incoming/
 *.soa
+.~*
 
 
 #OS junk files
