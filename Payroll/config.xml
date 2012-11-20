@@ -7,4 +7,5 @@
 	<entry key="service.ip">127.0.0.1</entry>
 	<entry key="registry.ip">127.0.0.1</entry>
 	<entry key="registry.port">3128</entry>
+  <entry key="soa.log">log/soa.log</entry>
 </properties>

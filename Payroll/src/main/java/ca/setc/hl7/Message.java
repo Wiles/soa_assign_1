@@ -119,4 +119,9 @@ public class Message {
     {
         return segments.size();
     }
+
+    public Segment[] getSegments()
+    {
+        return segments.toArray(new Segment[segments.size()]);
+    }
 }

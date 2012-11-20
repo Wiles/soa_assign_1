@@ -50,6 +50,9 @@ public class SoaSocketListener extends Thread {
 
 
             Message request = new Message(sb.toString().getBytes("UTF-8"));
+
+            SoaLogger.receivedRequest(request);
+
             ServiceRequest sr = new ServiceRequest(request);
 
 
@@ -57,8 +60,9 @@ public class SoaSocketListener extends Thread {
             SoaMethod method = service.getMethod(sr.getMethod());
 
             Object answer = service.execute(sr.getMethod(), sr.getParameters());
-
-            writer.write(mb.response(answer, method.getReturnDescriptions(), method.getReturnType()).toHl7());
+            Message responseMessage = mb.response(answer, method.getReturnDescriptions(), method.getReturnType());
+            SoaLogger.respond(responseMessage);
+            writer.write(responseMessage.toHl7());
             writer.flush();
 
         } catch (SoaException e) {
