@@ -12,7 +12,7 @@ namespace Purchase_Totaller.hl7
         public readonly static string NewRow = ((char)13).ToString();
         public readonly static string BeginMarker = ((char)11).ToString();
         public readonly static string EndMarker = ((char)28).ToString();
-        public readonly static string EndOfMessage = new string(new char[] {((char)28), ((char)13), ((char)10)});
+        public readonly static string EndOfMessage = new string(new char[] { ((char)28), ((char)13), ((char)10) });
 
         public readonly string Id;
         public readonly string TeamName;
@@ -83,7 +83,7 @@ namespace Purchase_Totaller.hl7
 
     public class PublishServiceRequest : Request
     {
-        public PublishServiceRequest(string teamName, int teamId, LocalService service):
+        public PublishServiceRequest(string teamName, int teamId, RemoteService service) :
             base("PUB-SERVICE", teamName, teamId.ToString())
         {
             Contents.Add("SRV");
@@ -124,7 +124,7 @@ namespace Purchase_Totaller.hl7
     public class QueryServiceRequest : Request
     {
         public readonly string TagName;
-        public QueryServiceRequest(string teamName, int teamId, string tagName): 
+        public QueryServiceRequest(string teamName, int teamId, string tagName) :
             base("QUERY-SERVICE", teamName, teamId.ToString())
         {
             this.TagName = tagName;
@@ -142,7 +142,7 @@ namespace Purchase_Totaller.hl7
 
     public class ExecuteServiceRequest : Request
     {
-        public ExecuteServiceRequest(string teamName, int teamId, RemoteServiceCall call):
+        public ExecuteServiceRequest(string teamName, int teamId, RemoteServiceCall call) :
             base("EXEC-SERVICE", teamName, teamId.ToString())
         {
             Contents.Add("SRV");
@@ -156,7 +156,7 @@ namespace Purchase_Totaller.hl7
             Contents.Add(NewRow);
 
             for (int i = 0; i < call.Args.Count; i++)
-			{
+            {
                 var arg = call.Args[i];
                 Contents.Add("ARG");
                 Contents.Add(arg.Position.ToString());
@@ -165,12 +165,77 @@ namespace Purchase_Totaller.hl7
                 Contents.Add("");
                 Contents.Add(arg.Value);
                 Contents.Add(NewRow);
-			}
+            }
+        }
+    }
+
+    public class ExecuteServiceServerRequest
+    {
+        public readonly RemoteServiceCall Call;
+        private ExecuteServiceServerRequest(RemoteServiceCall call)
+        {
+            this.Call = call;
         }
 
-        public static ExecuteServiceRequest FromMessage(string received)
+        public static ExecuteServiceServerRequest FromMessage(string received)
+        {
+            var lines = received.Split(Request.NewRow.ToCharArray());
+            var rows = (from l in lines
+                        select l.Split(Request.Delimiter.ToCharArray())).ToArray();
+
+            var isOk = rows[0][1].Equals("ok", StringComparison.CurrentCultureIgnoreCase);
+            if (isOk)
+            {
+                var serviceName = rows[1][2];
+                var numSegments = int.Parse(rows[1][4]);
+
+                var call = new RemoteServiceCall(serviceName);
+                var request = new ExecuteServiceServerRequest(call);
+                for (int i = 0; i < numSegments; i++)
+                {
+                    var row = rows[2 + i];
+                    var pos = int.Parse(row[1]);
+                    var respName = row[2];
+                    var dataType = ServiceArgument.TypeFromString(row[3]);
+                    var value = row[5];
+
+                    var arg = new ServiceArgument(pos, respName, dataType);
+                    arg.Value = value;
+                    call.Args.Add(arg);
+                }
+
+                return request;
+            }
+            else
+            {
+                throw new FailureRequestException("-6", "");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ExecuteServiceServerResponse
+    {
+        public ExecuteServiceServerResponse(double purchaseAmount, string province)
+        {
+        }
+
+        public string ToHl7()
         {
             throw new NotImplementedException();
+        }
+    }
+
+    public class FailureRequestException : Exception
+    {
+        public readonly string ErrorCode;
+        public readonly string ErrorMessage;
+        public FailureRequestException(string errorCode, string errorMessage)
+        {
+            this.ErrorCode = errorCode;
+            this.ErrorMessage = errorMessage;
         }
     }
 }

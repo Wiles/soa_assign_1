@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Purchase_Totaller.hl7
 {
-    public class HlConnection
+    public class ServiceConnection
     {
         public readonly string TeamName;
 
@@ -23,11 +23,11 @@ namespace Purchase_Totaller.hl7
 
         private readonly IPAddress ip;
         private readonly int port;
-        public HlConnection(string teamName): this(teamName, IPAddress.Parse("127.0.0.1"), 3128)
+        public ServiceConnection(string teamName): this(teamName, IPAddress.Parse("127.0.0.1"), 3128)
         {
         }
     
-        public HlConnection(string teamName, IPAddress ip, int port)
+        public ServiceConnection(string teamName, IPAddress ip, int port)
         {
             this.TeamName = teamName;
             this.ip = ip;
@@ -112,7 +112,7 @@ namespace Purchase_Totaller.hl7
             }
         }
 
-        public PublishServiceResponse Publish(LocalService service)
+        public PublishServiceResponse Publish(RemoteService service)
         {
             EnforceRegistered();
 
