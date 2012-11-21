@@ -100,7 +100,7 @@ namespace Purchase_Totaller.hl7
                 Contents.Add("ARG");
                 Contents.Add(arg.Position.ToString());
                 Contents.Add(arg.Name);
-                Contents.Add(ServiceArgument.TypeToString(arg.dataType));
+                Contents.Add(ServiceArgument.TypeToString(arg.DataType));
                 Contents.Add(arg.Mandatory ? "mandatory" : "optional");
                 Contents.Add(NewRow);
             }
@@ -161,7 +161,7 @@ namespace Purchase_Totaller.hl7
                 Contents.Add("ARG");
                 Contents.Add(arg.Position.ToString());
                 Contents.Add(arg.Name);
-                Contents.Add(ServiceArgument.TypeToString(arg.dataType));
+                Contents.Add(ServiceArgument.TypeToString(arg.DataType));
                 Contents.Add("");
                 Contents.Add(arg.Value);
                 Contents.Add(NewRow);

@@ -52,6 +52,23 @@ namespace Purchase_Totaller
                         runToolStripMenuItem1.Enabled = true;
 
                         queriedService = connection.QueryService(serviceTag).Service;
+
+                        var args = from a in queriedService.Args
+                                   orderby a.Position
+                                   select a;
+
+                        foreach (var arg in args)
+                        {
+                            argGrid.Rows.Add(new object[] { arg.Name, ServiceArgument.TypeToString(arg.DataType), arg.Mandatory, arg.Value });
+                        }
+
+                        var resps = from r in queriedService.Returns
+                                    orderby r.Position
+                                    select r;
+                        foreach (var resp in resps)
+                        {
+                            respGrid.Rows.Add(new object[] { resp.Name, ServiceArgument.TypeToString(resp.DataType), resp.Value });
+                        }
                     }
                     else
                     {
@@ -76,8 +93,29 @@ namespace Purchase_Totaller
 
             var call = new RemoteServiceCall(serviceTag, teamName, (int)connection.TeamId);
 
-            // TODO: Parse datagrid and make call
-            // call.Args.Add();
+            int i = 1;
+            foreach (DataGridViewRow row in argGrid.Rows)
+            {
+                var argName = row.Cells[0].Value.ToString();
+                var argDataType= ServiceArgument.TypeFromString(row.Cells[1].Value.ToString());
+                var argMandatory = bool.Parse(row.Cells[2].Value.ToString());
+                var argValue = row.Cells[3].Value.ToString();
+
+                var arg = new ServiceArgument(i++, argName, argDataType, argMandatory);
+                arg.Value = argValue;
+                call.Args.Add(arg);
+            }
+
+            i = 1;
+            foreach (DataGridViewRow row in respGrid.Rows)
+            {
+                var respName = row.Cells[0].Value.ToString();
+                var respDataType = ServiceArgument.TypeFromString(row.Cells[1].Value.ToString());
+                var respValue = row.Cells[2].Value.ToString();
+
+                var ret = new ServiceReturn(i++, respName, respDataType, respValue);
+                call.Returns.Add(ret);
+            }
 
             connection.ExecuteService(call);
         }

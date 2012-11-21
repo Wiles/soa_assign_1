@@ -49,6 +49,7 @@ namespace Purchase_Totaller.hl7
         public readonly int CallerTeamId;
         public readonly string ServiceName;
         public readonly List<ServiceArgument> Args;
+        public readonly List<ServiceReturn> Returns;
 
         public RemoteServiceCall(string serviceName, string callerTeamName = "", int callerTeamId = 0)
         {
@@ -56,6 +57,7 @@ namespace Purchase_Totaller.hl7
             this.CallerTeamId = callerTeamId;
             this.CallerTeamName = callerTeamName;
             this.Args = new List<ServiceArgument>();
+            this.Returns = new List<ServiceReturn>();
         }
     }
 
@@ -77,7 +79,7 @@ namespace Purchase_Totaller.hl7
     {
         public int Position;
         public readonly string Name;
-        public readonly ServiceDataType dataType;
+        public readonly ServiceDataType DataType;
         public readonly bool Mandatory;
 
         public string Value;
@@ -91,7 +93,7 @@ namespace Purchase_Totaller.hl7
         {
             this.Position = position;
             this.Name = name;
-            this.dataType = dataType;
+            this.DataType = dataType;
             this.Mandatory = mandatory;
             this.Value = value;
         }
