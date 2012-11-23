@@ -32,7 +32,7 @@ public final class Main {
      * @throws NoSuchMethodException
      * @throws IllegalAccessException
      */
-    public static void main(String[] args) throws ClassNotFoundException, IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, SoaException {
+    public static void main(String[] args) {
         try
         {
             URL[] urls = ClasspathUrlFinder.findClassPaths();
@@ -78,16 +78,18 @@ public final class Main {
 
             try
             {
-                soa.publishService(serviceIp, Integer.parseInt(Config.get("service.publish.port")), services.get("PAYROLL"));
+                soa.publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), services.get("PAYROLL"));
             }
             catch(SoaException ex)
             {
                 if(!ex.getErrorMessage().equals("Team '"+teamName+"' (ID : "+teamId+") has already published service PAYROLL"))
                 {
-                    System.out.println(ex.getMessage());
                     throw ex;
                 }
             }
+
+            KeepAlive ka = new KeepAlive();
+            ka.start();
 
             ServerSocket serverSocket = null;
             boolean listening = true;

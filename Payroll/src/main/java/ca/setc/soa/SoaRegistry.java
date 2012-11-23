@@ -1,5 +1,6 @@
 package ca.setc.soa;
 
+import ca.setc.configuration.Config;
 import ca.setc.hl7.Message;
 import ca.setc.messaging.MessageBuilder;
 import ca.setc.service.SoaService;
@@ -48,7 +49,12 @@ public class SoaRegistry {
 
     public int registerTeam() throws SoaException {
 
-        Message response = sendMessage(mb.registerTeam(teamName));
+        return registerTeam(true);
+    }
+
+    private int registerTeam(boolean retry) throws SoaException {
+
+        Message response = sendMessage(mb.registerTeam(teamName), retry);
         try
         {
             teamId = Integer.parseInt(response.get(0).get(2).get());
@@ -63,7 +69,12 @@ public class SoaRegistry {
 
     public void publishService(String ip, int port, SoaService service) throws SoaException
     {
-        sendMessage(mb.publishService(teamName, teamId, ip, port, service));
+        publishService(ip, port, service, true);
+    }
+
+    private void publishService(String ip, int port, SoaService service, boolean retry) throws SoaException
+    {
+        sendMessage(mb.publishService(teamName, teamId, ip, port, service), retry);
     }
 
     /**
@@ -77,14 +88,14 @@ public class SoaRegistry {
      * @throws SoaException
      */
     public void queryTeam(String queryTeam, int queryId, String serviceName) throws SoaException {
-        Message response = sendMessage(mb.queryTeam(teamName, teamId, queryTeam, queryId, serviceName));
+        Message response = sendMessage(mb.queryTeam(teamName, teamId, queryTeam, queryId, serviceName), true);
         if("NOT-OK".equals(response.get(0).get(1)))
         {
             throw new SoaException(Integer.parseInt(response.get(0).get(2).get()), response.get(0).get(3).get());
         }
     }
 
-    private synchronized Message sendMessage(Message message) throws SoaException {
+    private synchronized Message sendMessage(Message message, boolean retry) throws SoaException {
         Socket sock = null;
         OutputStream writer = null;
         BufferedReader reader = null;
@@ -108,13 +119,21 @@ public class SoaRegistry {
             SoaLogger.sentServiceRequest(message, responseMessage);
             if(responseMessage.get(0).get(1).get().equals("NOT-OK"))
             {
-                throw new SoaException(
-                        Integer.parseInt(responseMessage.get(0).get(2).get()),
-                        responseMessage.get(0).get(3).get()
-                );
+                if(retry)
+                {
+                    registerTeam(false);
+                    publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), ServiceLoader.getService(Config.get("Tag")), false);
+                }
+                int codeNumber = Integer.parseInt(responseMessage.get(0).get(2).get());
+                String error = responseMessage.get(0).get(3).get();
+                throw new SoaException(codeNumber, error);
             }
 
             return responseMessage;
+        }
+        catch(SoaException e)
+        {
+            throw e;
         }
         catch(Exception e)
         {
