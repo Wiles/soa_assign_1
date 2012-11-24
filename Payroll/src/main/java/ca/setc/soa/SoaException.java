@@ -1,7 +1,7 @@
 package ca.setc.soa;
 
 /**
- * An exception for a NOT-OK message from the soa
+ * An exception for a NOT OK message from the soa
  * or other errors when communicating
  */
 public class SoaException extends Exception {

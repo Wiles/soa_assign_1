@@ -33,6 +33,12 @@ public final class Config {
         fields.add("service.ip");
         fields.add("registry.port");
         fields.add("registry.ip");
+        fields.add("service.publish.port");
+        fields.add("soa.log");
+        fields.add("Tag");
+        fields.add("service");
+        fields.add("ok");
+        fields.add("not-ok");
 
         return Collections.unmodifiableList(fields);
     }

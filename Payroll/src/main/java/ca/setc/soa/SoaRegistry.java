@@ -134,7 +134,7 @@ public final class SoaRegistry {
      */
     public void queryTeam(String queryTeam, int queryId, String serviceName) throws SoaException {
         Message response = sendMessage(mb.queryTeam(teamName, teamId, queryTeam, queryId, serviceName), true);
-        if("NOT-OK".equals(response.get(0).get(1)))
+        if(Config.get("not-ok").equals(response.get(0).get(1)))
         {
             throw new SoaException(Integer.parseInt(response.get(0).get(2).get()), response.get(0).get(3).get());
         }
@@ -163,7 +163,7 @@ public final class SoaRegistry {
             Message responseMessage = new Message(sb.toString().getBytes("UTF-8"));
             SoaLogger.sentServiceRequest(message, responseMessage);
 
-            if(responseMessage.get(0).get(1).get().equals("NOT-OK"))
+            if(responseMessage.get(0).get(1).get().equals(Config.get("not-ok")))
             {
                 int codeNumber = Integer.parseInt(responseMessage.get(0).get(2).get());
                 String error = responseMessage.get(0).get(3).get();

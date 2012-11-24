@@ -1,5 +1,6 @@
 package ca.setc.messaging;
 
+import ca.setc.configuration.Config;
 import ca.setc.hl7.Field;
 import ca.setc.hl7.Message;
 import ca.setc.hl7.Segment;
@@ -214,7 +215,7 @@ public class MessageBuilder {
         Segment segment = new Segment();
 
         segment.add(new Field("SOA"));
-        segment.add(new Field("NOT-OK"));
+        segment.add(new Field(Config.get("not-ok")));
         segment.add(new Field(e.getCode()));
         segment.add(new Field(e.getMessage()));
         segment.add(new Field(""));
@@ -237,7 +238,7 @@ public class MessageBuilder {
         Segment segment = new Segment();
 
         segment.add(new Field("PUB"));
-        segment.add(new Field("OK"));
+        segment.add(new Field(Config.get("ok")));
         segment.add(new Field(""));
         segment.add(new Field(""));
         segment.add(new Field(1));
