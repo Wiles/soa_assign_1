@@ -31,8 +31,8 @@ namespace Purchase_Totaller.hl7
 
     public class QueryServiceResponse : Response
     {
-        public readonly LocalService Service;
-        public QueryServiceResponse(LocalService service)
+        public readonly RemoteService Service;
+        public QueryServiceResponse(RemoteService service)
         {
             this.Service = service;
         }
@@ -195,7 +195,7 @@ namespace Purchase_Totaller.hl7
                 var mchIndex = 2 + numArgs + numResponses;
                 var ip = rows[mchIndex][1];
                 var port = int.Parse(rows[mchIndex][2]);
-                var service = new LocalService(IPAddress.Parse(ip), port, serviceName, fullRequest.TagName);
+                var service = new RemoteService(IPAddress.Parse(ip), port, serviceName, fullRequest.TagName);
 
                 var response = new QueryServiceResponse(service);
                 // Read the args

@@ -11,10 +11,10 @@ namespace tests
         [TestMethod]
         public void TestPublish()
         {
-            var connection = new HlConnection("Bob");
+            var connection = new ServiceConnection("Bob");
             connection.Register();
 
-            var service = new LocalService(IPAddress.Parse("127.0.0.1"), 5453,
+            var service = new RemoteService(IPAddress.Parse("127.0.0.1"), 5453,
                 "Service", "GIORP-TOTAL", 1, "Bob description");
 
             var arg = new ServiceArgument(1, "x", ServiceDataType.Tstring, true);
@@ -29,7 +29,7 @@ namespace tests
         [TestMethod]
         public void TestRegisterTeam()
         {
-            var connection = new HlConnection("Bob");
+            var connection = new ServiceConnection("Bob");
             var response = connection.Register();
 
             Assert.IsTrue(connection.TeamName == "Bob");
@@ -41,7 +41,7 @@ namespace tests
         [TestMethod]
         public void TestUnRegisterTeam()
         {
-            var connection = new HlConnection("Bob");
+            var connection = new ServiceConnection("Bob");
             connection.Register();
 
             var response = connection.UnRegister();
@@ -54,13 +54,13 @@ namespace tests
         public void TestQueryTeam()
         {
             var teamname = "Bob";
-            var connection = new HlConnection(teamname);
+            var connection = new ServiceConnection(teamname);
             int teamId = connection.Register().TeamId;
 
             var serviceName = "Service1";
             var serviceTag = "GIORP-TOTAL";
 
-            var service = new LocalService(IPAddress.Parse("127.0.0.1"), 5453, 
+            var service = new RemoteService(IPAddress.Parse("127.0.0.1"), 5453, 
                 serviceName, serviceTag, 1, "Bob description");
             var arg = new ServiceArgument(1, "Name", ServiceDataType.Tstring, true);
             service.Args.Add(arg);
@@ -76,7 +76,7 @@ namespace tests
         [TestMethod]
         public void QueryServiceMessage()
         {
-            var connection = new HlConnection("Bob");
+            var connection = new ServiceConnection("Bob");
             connection.Register();
 
             connection.QueryService("GIORP-TOTAL");
@@ -85,7 +85,7 @@ namespace tests
         [TestMethod]
         public void ExecuteServiceMessage()
         {
-            var connection = new HlConnection("Bob");
+            var connection = new ServiceConnection("Bob");
             connection.Register();
 
             var service = "GIORP-TOTAL";

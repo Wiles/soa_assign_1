@@ -44,11 +44,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="hl7\HlConnection.cs" />
+    <Compile Include="hl7\Connection.cs" />
     <Compile Include="hl7\Request.cs" />
     <Compile Include="hl7\Response.cs" />
-    <Compile Include="hl7\HlService.cs" />
+    <Compile Include="hl7\Service.cs" />
     <Compile Include="logic\PurchaseTotaller.cs" />
+    <Compile Include="ui\ConnectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\ConnectForm.Designer.cs">
+      <DependentUpon>ConnectForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -66,6 +72,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="ui\ConnectForm.resx">
+      <DependentUpon>ConnectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
