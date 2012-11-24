@@ -2,12 +2,19 @@ package ca.setc.soa;
 
 import ca.setc.configuration.Config;
 
+/**
+ * Keeps the service registers as much as possible by
+ * reregistering every 60 seconds
+ */
 public class KeepAlive extends Thread {
 
     private static final long SLEEP_DURATION = 60 * 1000;
 
     private SoaRegistry soa = SoaRegistry.getInstance();
 
+    /**
+     * run the thread
+     */
     @Override
     public void run()
     {

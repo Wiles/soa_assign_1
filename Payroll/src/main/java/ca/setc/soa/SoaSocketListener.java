@@ -15,6 +15,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * Listens for and handles requests
+ */
 public class SoaSocketListener extends Thread {
 
     private Logger log = LoggerFactory.getLogger(SoaSocketListener.class);
@@ -22,6 +25,10 @@ public class SoaSocketListener extends Thread {
     private Socket socket = null;
     private MessageBuilder mb = new MessageBuilder();
 
+    /**
+     * Constructor
+     * @param socket serversocket to use
+     */
     public SoaSocketListener(Socket socket)
     {
         super("SoaSocketListener");
@@ -29,6 +36,9 @@ public class SoaSocketListener extends Thread {
     }
 
     @Override
+    /**
+     * Run the thread
+     */
     public void run() {
         OutputStream writer = null;
         BufferedReader reader = null;

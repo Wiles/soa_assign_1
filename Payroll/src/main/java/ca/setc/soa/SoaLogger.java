@@ -13,6 +13,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Logs service messages and stuff
+ */
 public final class SoaLogger {
 
     private static Logger log = LoggerFactory.getLogger(SoaLogger.class);
@@ -21,6 +24,9 @@ public final class SoaLogger {
 
     private SoaLogger(){}
 
+    /**
+     * Writes the lod header to the logfile
+     */
     public static void header()
     {
         synchronized (logFile){
@@ -50,6 +56,11 @@ public final class SoaLogger {
         }
     }
 
+    /**
+     * Writes a format set of message and response
+     * @param sent message
+     * @param response message
+     */
     public static void sentServiceRequest(Message sent, Message response)
     {
         synchronized (logFile){
@@ -83,6 +94,11 @@ public final class SoaLogger {
         }
     }
 
+    /**
+     * Writes a formatted received request
+     *
+     * @param received message
+     */
     public static void receivedRequest(Message received)
     {
         synchronized (logFile){
@@ -111,6 +127,11 @@ public final class SoaLogger {
         }
     }
 
+    /**
+     * Writes a formatted response
+     *
+     * @param response message
+     */
     public static void respond(Message response)
     {
         synchronized (logFile){

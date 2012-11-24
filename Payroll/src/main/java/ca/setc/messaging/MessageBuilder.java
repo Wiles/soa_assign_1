@@ -202,6 +202,11 @@ public class MessageBuilder {
         return message;
     }
 
+    /**
+     * Creates an error message
+     * @param e exception to turn into error message
+     * @return formatted message
+     */
     public Message error(SoaException e)
     {
         Message message = new Message();
@@ -218,6 +223,13 @@ public class MessageBuilder {
         return message;
     }
 
+    /**
+     * Creates a response message
+     * @param answer the answer(s)
+     * @param returnDescription set of return descriptions
+     * @param returnType type of the return
+     * @return message containing reponse
+     */
     public Message response(Object answer, String[] returnDescription, Class<?> returnType)
     {
         Message message = new Message();

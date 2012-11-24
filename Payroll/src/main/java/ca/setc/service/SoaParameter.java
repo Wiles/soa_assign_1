@@ -21,6 +21,11 @@ public class SoaParameter {
         this.name = name;
     }
 
+    /**
+     * Constructor
+     * @param name
+     * @param value
+     */
     public SoaParameter(String name, String value)
     {
         this.name = name;
@@ -51,6 +56,10 @@ public class SoaParameter {
         return name;
     }
 
+    /**
+     * get the value of the parameter
+     * @return the value
+     */
     public String getValue()
     {
         return value;

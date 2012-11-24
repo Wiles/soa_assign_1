@@ -40,6 +40,11 @@ public final class ServiceLoader {
         return services;
     }
 
+    /**
+     * find a loaded service
+     * @param name of the service
+     * @return service or null
+     */
     public static SoaService getService(String name)
     {
         return services.get(name);

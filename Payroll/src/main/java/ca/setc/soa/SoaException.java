@@ -49,6 +49,10 @@ public class SoaException extends Exception {
         return this.code;
     }
 
+    /**
+     * Get the error message
+     * @return error message
+     */
     public String getErrorMessage()
     {
         return this.msg;

@@ -120,6 +120,10 @@ public class Message {
         return segments.size();
     }
 
+    /**
+     * return the segments
+     * @return segments
+     */
     public Segment[] getSegments()
     {
         return segments.toArray(new Segment[segments.size()]);

@@ -11,6 +11,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * Handles communicate to and from the SoaRegistry
+ */
 public final class SoaRegistry {
 
     private String ip;
@@ -23,21 +26,41 @@ public final class SoaRegistry {
 
     private SoaRegistry(){}
 
+    /**
+     * Set the IP of the registry to connect to
+     *
+     * @param ip of the registry
+     */
     public void setIP(String ip)
     {
         this.ip = ip;
     }
 
+    /**
+     * Sets the port of the registry to connect to
+     *
+     * @param port of the registry
+     */
     public void setPort(int port)
     {
         this.port = port;
     }
 
+    /**
+     * Set the current team name
+     *
+     * @param teamName team name
+     */
     public void setTeamName(String teamName)
     {
         this.teamName = teamName;
     }
 
+    /**
+     * Get the singleton instance of the SoaRegistry
+     *
+     * @return singleton instance
+     */
     public static SoaRegistry getInstance()
     {
         if(instance == null)
@@ -47,6 +70,11 @@ public final class SoaRegistry {
         return instance;
     }
 
+    /**
+     * Send a register team message
+     * @return team id
+     * @throws SoaException if a error occurs
+     */
     public int registerTeam() throws SoaException {
 
         return registerTeam(true);
@@ -67,6 +95,13 @@ public final class SoaRegistry {
         return teamId;
     }
 
+    /**
+     * Send a publish service message
+     * @param ip ip the service is running on
+     * @param port the service is running on
+     * @param service name of the service
+     * @throws SoaException on error
+     */
     public void publishService(String ip, int port, SoaService service) throws SoaException
     {
         try

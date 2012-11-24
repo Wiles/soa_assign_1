@@ -12,6 +12,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * Loads and contains global config values
+ */
 public final class Config {
 
     private static Logger log = LoggerFactory.getLogger(Config.class);
@@ -36,6 +39,11 @@ public final class Config {
 
     private Config(){}
 
+    /**
+     * Get a config value by key
+     * @param key key
+     * @return config value or null
+     */
     public static String get(String key)
     {
         if(properties == null)
