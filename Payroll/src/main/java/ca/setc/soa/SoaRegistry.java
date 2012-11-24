@@ -134,7 +134,7 @@ public final class SoaRegistry {
      */
     public void queryTeam(String queryTeam, int queryId, String serviceName) throws SoaException {
         Message response = sendMessage(mb.queryTeam(teamName, teamId, queryTeam, queryId, serviceName), true);
-        if(Config.get("not-ok").equals(response.get(0).get(1)))
+        if(Config.get("not-ok").equals(response.get(0).get(1).get()))
         {
             throw new SoaException(Integer.parseInt(response.get(0).get(2).get()), response.get(0).get(3).get());
         }

@@ -40,7 +40,7 @@ public class Message {
             throw new IllegalArgumentException("raw does not contain a BOM");
         }
 
-        if( raw[raw.length - 3] != Message.B_EOM[0] ||
+        if( raw[raw.length - Message.B_EOM.length] != Message.B_EOM[0] ||
                 raw[raw.length - 2] != Message.B_EOM[1] ||
                 raw[raw.length - 1] != Message.B_EOM[2])
         {
