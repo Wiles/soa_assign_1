@@ -8,7 +8,6 @@ public class SoaParameter {
     private Class<?> type;
     private String name;
     private String value;
-    private String sType;
 
     /**
      * Constructor
@@ -22,9 +21,8 @@ public class SoaParameter {
         this.name = name;
     }
 
-    public SoaParameter(String name, String type, String value)
+    public SoaParameter(String name, String value)
     {
-        sType = type.toLowerCase();
         this.name = name;
         this.value = value;
     }

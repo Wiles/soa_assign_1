@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class SoaRegistry {
+public final class SoaRegistry {
 
     private String ip;
     private int teamId;
@@ -69,7 +69,17 @@ public class SoaRegistry {
 
     public void publishService(String ip, int port, SoaService service) throws SoaException
     {
-        publishService(ip, port, service, true);
+        try
+        {
+            publishService(ip, port, service, true);
+        }
+        catch(SoaException ex)
+        {
+            if(!ex.getErrorMessage().equals("Team '"+teamName+"' (ID : "+teamId+") has already published service " + Config.get("Tag")))
+            {
+                throw ex;
+            }
+        }
     }
 
     private void publishService(String ip, int port, SoaService service, boolean retry) throws SoaException
@@ -117,15 +127,18 @@ public class SoaRegistry {
 
             Message responseMessage = new Message(sb.toString().getBytes("UTF-8"));
             SoaLogger.sentServiceRequest(message, responseMessage);
+
             if(responseMessage.get(0).get(1).get().equals("NOT-OK"))
             {
-                if(retry)
+                int codeNumber = Integer.parseInt(responseMessage.get(0).get(2).get());
+                String error = responseMessage.get(0).get(3).get();
+                if(retry &&
+                   error.equals("Team '" + teamName + "' (ID : " + teamId + ") is not registered"))
                 {
                     registerTeam(false);
                     publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), ServiceLoader.getService(Config.get("Tag")), false);
                 }
-                int codeNumber = Integer.parseInt(responseMessage.get(0).get(2).get());
-                String error = responseMessage.get(0).get(3).get();
+
                 throw new SoaException(codeNumber, error);
             }
 

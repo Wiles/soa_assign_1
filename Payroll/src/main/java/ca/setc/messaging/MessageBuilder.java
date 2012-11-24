@@ -21,12 +21,12 @@ public class MessageBuilder {
      * Creates a publish service message based on the given service
      * @param teamName
      * @param teamId
-     * @param IP
+     * @param ip
      * @param service
      *
      * @return
      */
-    public Message publishService(String teamName, int teamId, String IP, int port, SoaService service)
+    public Message publishService(String teamName, int teamId, String ip, int port, SoaService service)
     {
         SoaMethod method = service.getMethods().get(0);
 
@@ -79,7 +79,7 @@ public class MessageBuilder {
 
         segment = new Segment();
         segment.add(new Field("MCH"));
-        segment.add(new Field(IP));
+        segment.add(new Field(ip));
         segment.add(new Field(port));
         message.add(segment);
 
@@ -248,7 +248,7 @@ public class MessageBuilder {
             segment.add(new Field(i + 1));
             segment.add(new Field(returnDescription[i]));
             segment.add(new Field(prettyTypeName(returnType)));
-            segment.add(new Field(answer.toString()));
+            segment.add(new Field(returns[i].toString()));
             message.add(segment);
         }
 

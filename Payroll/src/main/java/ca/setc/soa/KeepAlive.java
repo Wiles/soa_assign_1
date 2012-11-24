@@ -1,13 +1,9 @@
 package ca.setc.soa;
 
 import ca.setc.configuration.Config;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class KeepAlive extends Thread {
 
-
-    private Logger log = LoggerFactory.getLogger(KeepAlive.class);
     private static final long SLEEP_DURATION = 60 * 1000;
 
     private SoaRegistry soa = SoaRegistry.getInstance();
@@ -22,9 +18,9 @@ public class KeepAlive extends Thread {
                 soa.registerTeam();
                 soa.publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), ServiceLoader.getService(Config.get("Tag")));
             }
-            catch(Exception ex)
+            catch(Exception ignore)
             {
-                log.error("Keep alive error", ex);
+                //ignore
             }
             finally
             {

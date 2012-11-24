@@ -1,8 +1,8 @@
 package ca.setc;
 
 import ca.setc.configuration.Config;
-import ca.setc.soa.*;
 import ca.setc.service.SoaService;
+import ca.setc.soa.*;
 import org.scannotation.ClasspathUrlFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +65,6 @@ public final class Main {
                 System.exit(-1);
             }
 
-            String serviceIp = Config.get("registry.ip");
-
             SoaRegistry soa = SoaRegistry.getInstance();
             soa.setIP(registryIp);
             soa.setPort(registryPort);
@@ -76,17 +74,7 @@ public final class Main {
 
             log.info("Team Id: {}", teamId);
 
-            try
-            {
-                soa.publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), services.get("PAYROLL"));
-            }
-            catch(SoaException ex)
-            {
-                if(!ex.getErrorMessage().equals("Team '"+teamName+"' (ID : "+teamId+") has already published service PAYROLL"))
-                {
-                    throw ex;
-                }
-            }
+            soa.publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), services.get(Config.get("Tag")));
 
             KeepAlive ka = new KeepAlive();
             ka.start();

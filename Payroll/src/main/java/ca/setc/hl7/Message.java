@@ -16,7 +16,7 @@ public class Message {
 
     private static final byte[] B_BOM = new byte[]{(byte)0x0B};
     private static final byte[] B_EOS = new byte[]{(byte)0x0D};
-    private static final byte[] B_EOM = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
+    public static final byte[] B_EOM = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
 
     private List<Segment> segments = new LinkedList<Segment>();
 

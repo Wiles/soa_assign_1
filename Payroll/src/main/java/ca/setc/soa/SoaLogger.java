@@ -13,11 +13,13 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SoaLogger {
+public final class SoaLogger {
 
     private static Logger log = LoggerFactory.getLogger(SoaLogger.class);
     private static File logFile = new File(Config.get("soa.log"));
     private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    private SoaLogger(){}
 
     public static void header()
     {
@@ -139,6 +141,9 @@ public class SoaLogger {
 
     private static String date()
     {
-        return format.format(new Date());
+        synchronized (format)
+        {
+            return format.format(new Date());
+        }
     }
 }

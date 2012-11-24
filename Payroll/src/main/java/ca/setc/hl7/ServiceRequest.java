@@ -26,7 +26,7 @@ public class ServiceRequest {
                 if("ARG".equals(message.get(i).get(0).get()))
                 {
                     Segment seg = message.get(i);
-                    SoaParameter param = new SoaParameter(seg.get(2).get(), seg.get(3).get(), seg.get(5).get());
+                    SoaParameter param = new SoaParameter(seg.get(2).get(), seg.get(5).get());
                     params.put(message.get(i).get(1).get(), param);
                 }
             }
