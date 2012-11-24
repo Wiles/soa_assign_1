@@ -97,7 +97,7 @@ public class SoaService {
             }
             else
             {
-                if(!sent.getName().equals(needed.getName()))
+                if(needed == null || !sent.getName().equals(needed.getName()))
                 {
                     throw new SoaException(SoaException.CONTENT_ERROR, "Parameter name mismatch");
                 }

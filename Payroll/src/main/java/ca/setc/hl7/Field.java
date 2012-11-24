@@ -25,7 +25,7 @@ public class Field {
     {
         try
         {
-            this.value = new String(bytes, "UTF-8");
+            this.value = new String(bytes.clone(), "UTF-8");
         }
         catch(UnsupportedEncodingException ex)
         {
