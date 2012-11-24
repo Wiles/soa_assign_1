@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.util.Map;
@@ -26,11 +25,6 @@ public final class Main {
      * Start method
      *
      * @param args command line arguments
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @throws InvocationTargetException
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
      */
     public static void main(String[] args) {
         try
