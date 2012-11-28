@@ -1,5 +1,6 @@
 package ca.setc.messaging;
 
+import ca.setc.configuration.Config;
 import ca.setc.hl7.Field;
 import ca.setc.hl7.Message;
 import ca.setc.hl7.Segment;
@@ -21,12 +22,12 @@ public class MessageBuilder {
      * Creates a publish service message based on the given service
      * @param teamName
      * @param teamId
-     * @param IP
+     * @param ip
      * @param service
      *
      * @return
      */
-    public Message publishService(String teamName, int teamId, String IP, int port, SoaService service)
+    public Message publishService(String teamName, int teamId, String ip, int port, SoaService service)
     {
         SoaMethod method = service.getMethods().get(0);
 
@@ -79,7 +80,7 @@ public class MessageBuilder {
 
         segment = new Segment();
         segment.add(new Field("MCH"));
-        segment.add(new Field(IP));
+        segment.add(new Field(ip));
         segment.add(new Field(port));
         message.add(segment);
 
@@ -202,6 +203,11 @@ public class MessageBuilder {
         return message;
     }
 
+    /**
+     * Creates an error message
+     * @param e exception to turn into error message
+     * @return formatted message
+     */
     public Message error(SoaException e)
     {
         Message message = new Message();
@@ -209,7 +215,7 @@ public class MessageBuilder {
         Segment segment = new Segment();
 
         segment.add(new Field("SOA"));
-        segment.add(new Field("NOT-OK"));
+        segment.add(new Field(Config.get("not-ok")));
         segment.add(new Field(e.getCode()));
         segment.add(new Field(e.getMessage()));
         segment.add(new Field(""));
@@ -218,6 +224,13 @@ public class MessageBuilder {
         return message;
     }
 
+    /**
+     * Creates a response message
+     * @param answer the answer(s)
+     * @param returnDescription set of return descriptions
+     * @param returnType type of the return
+     * @return message containing reponse
+     */
     public Message response(Object answer, String[] returnDescription, Class<?> returnType)
     {
         Message message = new Message();
@@ -225,7 +238,7 @@ public class MessageBuilder {
         Segment segment = new Segment();
 
         segment.add(new Field("PUB"));
-        segment.add(new Field("OK"));
+        segment.add(new Field(Config.get("ok")));
         segment.add(new Field(""));
         segment.add(new Field(""));
         segment.add(new Field(1));
@@ -248,7 +261,7 @@ public class MessageBuilder {
             segment.add(new Field(i + 1));
             segment.add(new Field(returnDescription[i]));
             segment.add(new Field(prettyTypeName(returnType)));
-            segment.add(new Field(answer.toString()));
+            segment.add(new Field(returns[i].toString()));
             message.add(segment);
         }
 

@@ -1,5 +1,6 @@
 package ca.setc.soa;
 
+import ca.setc.configuration.Config;
 import ca.setc.hl7.Message;
 import ca.setc.messaging.MessageBuilder;
 import ca.setc.service.SoaService;
@@ -10,7 +11,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class SoaRegistry {
+/**
+ * Handles communicate to and from the SoaRegistry
+ */
+public final class SoaRegistry {
 
     private String ip;
     private int teamId;
@@ -22,21 +26,41 @@ public class SoaRegistry {
 
     private SoaRegistry(){}
 
+    /**
+     * Set the IP of the registry to connect to
+     *
+     * @param ip of the registry
+     */
     public void setIP(String ip)
     {
         this.ip = ip;
     }
 
+    /**
+     * Sets the port of the registry to connect to
+     *
+     * @param port of the registry
+     */
     public void setPort(int port)
     {
         this.port = port;
     }
 
+    /**
+     * Set the current team name
+     *
+     * @param teamName team name
+     */
     public void setTeamName(String teamName)
     {
         this.teamName = teamName;
     }
 
+    /**
+     * Get the singleton instance of the SoaRegistry
+     *
+     * @return singleton instance
+     */
     public static SoaRegistry getInstance()
     {
         if(instance == null)
@@ -46,9 +70,19 @@ public class SoaRegistry {
         return instance;
     }
 
+    /**
+     * Send a register team message
+     * @return team id
+     * @throws SoaException if a error occurs
+     */
     public int registerTeam() throws SoaException {
 
-        Message response = sendMessage(mb.registerTeam(teamName));
+        return registerTeam(true);
+    }
+
+    private int registerTeam(boolean retry) throws SoaException {
+
+        Message response = sendMessage(mb.registerTeam(teamName), retry);
         try
         {
             teamId = Integer.parseInt(response.get(0).get(2).get());
@@ -61,9 +95,31 @@ public class SoaRegistry {
         return teamId;
     }
 
+    /**
+     * Send a publish service message
+     * @param ip ip the service is running on
+     * @param port the service is running on
+     * @param service name of the service
+     * @throws SoaException on error
+     */
     public void publishService(String ip, int port, SoaService service) throws SoaException
     {
-        sendMessage(mb.publishService(teamName, teamId, ip, port, service));
+        try
+        {
+            publishService(ip, port, service, true);
+        }
+        catch(SoaException ex)
+        {
+            if(!ex.getErrorMessage().equals("Team '"+teamName+"' (ID : "+teamId+") has already published service " + Config.get("Tag")))
+            {
+                throw ex;
+            }
+        }
+    }
+
+    private void publishService(String ip, int port, SoaService service, boolean retry) throws SoaException
+    {
+        sendMessage(mb.publishService(teamName, teamId, ip, port, service), retry);
     }
 
     /**
@@ -77,14 +133,14 @@ public class SoaRegistry {
      * @throws SoaException
      */
     public void queryTeam(String queryTeam, int queryId, String serviceName) throws SoaException {
-        Message response = sendMessage(mb.queryTeam(teamName, teamId, queryTeam, queryId, serviceName));
-        if("NOT-OK".equals(response.get(0).get(1)))
+        Message response = sendMessage(mb.queryTeam(teamName, teamId, queryTeam, queryId, serviceName), true);
+        if(Config.get("not-ok").equals(response.get(0).get(1).get()))
         {
             throw new SoaException(Integer.parseInt(response.get(0).get(2).get()), response.get(0).get(3).get());
         }
     }
 
-    private synchronized Message sendMessage(Message message) throws SoaException {
+    private synchronized Message sendMessage(Message message, boolean retry) throws SoaException {
         Socket sock = null;
         OutputStream writer = null;
         BufferedReader reader = null;
@@ -106,15 +162,26 @@ public class SoaRegistry {
 
             Message responseMessage = new Message(sb.toString().getBytes("UTF-8"));
             SoaLogger.sentServiceRequest(message, responseMessage);
-            if(responseMessage.get(0).get(1).get().equals("NOT-OK"))
+
+            if(responseMessage.get(0).get(1).get().equals(Config.get("not-ok")))
             {
-                throw new SoaException(
-                        Integer.parseInt(responseMessage.get(0).get(2).get()),
-                        responseMessage.get(0).get(3).get()
-                );
+                int codeNumber = Integer.parseInt(responseMessage.get(0).get(2).get());
+                String error = responseMessage.get(0).get(3).get();
+                if(retry &&
+                   error.equals("Team '" + teamName + "' (ID : " + teamId + ") is not registered"))
+                {
+                    registerTeam(false);
+                    publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), ServiceLoader.getService(Config.get("Tag")), false);
+                }
+
+                throw new SoaException(codeNumber, error);
             }
 
             return responseMessage;
+        }
+        catch(SoaException e)
+        {
+            throw e;
         }
         catch(Exception e)
         {

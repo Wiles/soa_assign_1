@@ -74,6 +74,14 @@ public class SoaService {
         return this.description;
     }
 
+    /**
+     * executes the method
+     *
+     * @param methodName method to run
+     * @param params parameters to pass to service
+     * @return return value of executed service
+     * @throws SoaException
+     */
     public Object execute(String methodName, Map<String, SoaParameter> params) throws SoaException {
         SoaMethod method = methods.get(methodName);
         String[] parameters = new String[method.getParameters().size()];
@@ -89,7 +97,7 @@ public class SoaService {
             }
             else
             {
-                if(!sent.getName().equals(needed.getName()))
+                if(needed == null || !sent.getName().equals(needed.getName()))
                 {
                     throw new SoaException(SoaException.CONTENT_ERROR, "Parameter name mismatch");
                 }
@@ -173,6 +181,11 @@ public class SoaService {
         return new ArrayList<SoaMethod>(this.methods.values());
     }
 
+    /**
+     * Return a method by name
+     * @param name of method
+     * @return method or null
+     */
     public SoaMethod getMethod(String name)
     {
         return this.methods.get(name);

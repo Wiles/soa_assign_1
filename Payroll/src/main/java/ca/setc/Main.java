@@ -1,14 +1,13 @@
 package ca.setc;
 
 import ca.setc.configuration.Config;
-import ca.setc.soa.*;
 import ca.setc.service.SoaService;
+import ca.setc.soa.*;
 import org.scannotation.ClasspathUrlFinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.ServerSocket;
 import java.net.URL;
 import java.util.Map;
@@ -26,13 +25,8 @@ public final class Main {
      * Start method
      *
      * @param args command line arguments
-     * @throws ClassNotFoundException
-     * @throws IOException
-     * @throws InvocationTargetException
-     * @throws NoSuchMethodException
-     * @throws IllegalAccessException
      */
-    public static void main(String[] args) throws ClassNotFoundException, IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, SoaException {
+    public static void main(String[] args) {
         try
         {
             URL[] urls = ClasspathUrlFinder.findClassPaths();
@@ -65,8 +59,6 @@ public final class Main {
                 System.exit(-1);
             }
 
-            String serviceIp = Config.get("registry.ip");
-
             SoaRegistry soa = SoaRegistry.getInstance();
             soa.setIP(registryIp);
             soa.setPort(registryPort);
@@ -76,18 +68,10 @@ public final class Main {
 
             log.info("Team Id: {}", teamId);
 
-            try
-            {
-                soa.publishService(serviceIp, Integer.parseInt(Config.get("service.publish.port")), services.get("PAYROLL"));
-            }
-            catch(SoaException ex)
-            {
-                if(!ex.getErrorMessage().equals("Team '"+teamName+"' (ID : "+teamId+") has already published service PAYROLL"))
-                {
-                    System.out.println(ex.getMessage());
-                    throw ex;
-                }
-            }
+            soa.publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), services.get(Config.get("Tag")));
+
+            KeepAlive ka = new KeepAlive();
+            ka.start();
 
             ServerSocket serverSocket = null;
             boolean listening = true;

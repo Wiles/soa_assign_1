@@ -11,4 +11,6 @@
   <entry key="soa.log">log/soa.log</entry>
   <entry key="Tag">PAYROLL</entry>
   <entry key="service">payCheckMaker</entry>
+  <entry key="ok">OK</entry>
+  <entry key="not-ok">NOT-OK</entry>
 </properties>

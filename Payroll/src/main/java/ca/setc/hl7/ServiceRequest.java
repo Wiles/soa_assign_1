@@ -6,6 +6,9 @@ import ca.setc.soa.SoaException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Represents a service request
+ */
 public class ServiceRequest {
 
     private String method;
@@ -14,7 +17,11 @@ public class ServiceRequest {
     private String team;
     private int teamId;
 
-
+    /**
+     * Constructor
+     * @param message to turn into a request
+     * @throws SoaException
+     */
     public ServiceRequest(Message message) throws SoaException {
         try
         {
@@ -26,7 +33,7 @@ public class ServiceRequest {
                 if("ARG".equals(message.get(i).get(0).get()))
                 {
                     Segment seg = message.get(i);
-                    SoaParameter param = new SoaParameter(seg.get(2).get(), seg.get(3).get(), seg.get(5).get());
+                    SoaParameter param = new SoaParameter(seg.get(2).get(), seg.get(5).get());
                     params.put(message.get(i).get(1).get(), param);
                 }
             }
@@ -37,20 +44,36 @@ public class ServiceRequest {
         }
     }
 
+    /**
+     * get method name
+     * @return method name
+     */
     public String getMethod()
     {
         return this.method;
     }
 
+    /**
+     * get parameters
+     * @return parameter map
+     */
     public Map<String, SoaParameter> getParameters()
     {
         return params;
     }
 
+    /**
+     * Name of requesting team
+     * @return team name
+     */
     public String getTeam() {
         return team;
     }
 
+    /**
+     * id of requesting team
+     * @return team id
+     */
     public int getTeamId()
     {
         return teamId;

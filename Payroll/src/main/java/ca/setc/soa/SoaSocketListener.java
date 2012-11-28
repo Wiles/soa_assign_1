@@ -15,6 +15,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * Listens for and handles requests
+ */
 public class SoaSocketListener extends Thread {
 
     private Logger log = LoggerFactory.getLogger(SoaSocketListener.class);
@@ -22,6 +25,10 @@ public class SoaSocketListener extends Thread {
     private Socket socket = null;
     private MessageBuilder mb = new MessageBuilder();
 
+    /**
+     * Constructor
+     * @param socket serversocket to use
+     */
     public SoaSocketListener(Socket socket)
     {
         super("SoaSocketListener");
@@ -29,9 +36,13 @@ public class SoaSocketListener extends Thread {
     }
 
     @Override
+    /**
+     * Run the thread
+     */
     public void run() {
         OutputStream writer = null;
         BufferedReader reader = null;
+        StringBuilder sb = new StringBuilder();
         try {
             writer = socket.getOutputStream();
             reader = new BufferedReader(
@@ -39,15 +50,12 @@ public class SoaSocketListener extends Thread {
                             socket.getInputStream()));
 
             int response;
-            StringBuilder sb = new StringBuilder();
-            while((response = reader.read()) != 0x1c)
+            while((response = reader.read()) != Message.B_EOM[0])
             {
                 sb.append((char) response);
             }
-            sb.append((char)0x1c);
-            sb.append((char)0x0d);
-            sb.append((char)0x0a);
 
+            sb.append(new String(Message.B_EOM));
 
             Message request = new Message(sb.toString().getBytes("UTF-8"));
             SoaLogger.receivedRequest(request);
@@ -56,7 +64,7 @@ public class SoaSocketListener extends Thread {
 
             SoaRegistry.getInstance().queryTeam(sr.getTeam(), sr.getTeamId(), Config.get("Tag"));
 
-            SoaService service = ServiceLoader.getService("PAYROLL");
+            SoaService service = ServiceLoader.getService(Config.get("Tag"));
             SoaMethod method = service.getMethod(sr.getMethod());
 
             Object answer = service.execute(sr.getMethod(), sr.getParameters());
@@ -65,7 +73,8 @@ public class SoaSocketListener extends Thread {
             writer.write(responseMessage.toHl7());
             writer.flush();
 
-        } catch (SoaException e) {
+        }
+        catch (SoaException e) {
             log.error(e.getMessage(), e);
             if(writer != null)
             {
@@ -81,7 +90,8 @@ public class SoaSocketListener extends Thread {
                     log.error("Could not write response", ex);
                 }
             }
-        } catch(Exception e)
+        }
+        catch(Exception e)
         {
             log.error(e.getMessage(), e);
             if(writer != null)
@@ -98,6 +108,10 @@ public class SoaSocketListener extends Thread {
                     log.error("Could not write response", ex);
                 }
             }
+        }
+        catch(Error e)
+        {
+            log.error(e.getMessage(), e);
         }
         finally
         {

@@ -16,7 +16,7 @@ public class Message {
 
     private static final byte[] B_BOM = new byte[]{(byte)0x0B};
     private static final byte[] B_EOS = new byte[]{(byte)0x0D};
-    private static final byte[] B_EOM = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
+    public static final byte[] B_EOM = new byte[]{(byte)0x1C, (byte)0x0D, (byte)0x0A};
 
     private List<Segment> segments = new LinkedList<Segment>();
 
@@ -40,7 +40,7 @@ public class Message {
             throw new IllegalArgumentException("raw does not contain a BOM");
         }
 
-        if( raw[raw.length - 3] != Message.B_EOM[0] ||
+        if( raw[raw.length - Message.B_EOM.length] != Message.B_EOM[0] ||
                 raw[raw.length - 2] != Message.B_EOM[1] ||
                 raw[raw.length - 1] != Message.B_EOM[2])
         {
@@ -120,6 +120,10 @@ public class Message {
         return segments.size();
     }
 
+    /**
+     * return the segments
+     * @return segments
+     */
     public Segment[] getSegments()
     {
         return segments.toArray(new Segment[segments.size()]);

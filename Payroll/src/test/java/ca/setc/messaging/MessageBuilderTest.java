@@ -1,9 +1,9 @@
 package ca.setc.messaging;
 
-import ca.setc.soa.ServiceLoader;
 import ca.setc.hl7.Message;
 import ca.setc.service.SoaService;
 import ca.setc.services.CarLoan;
+import ca.setc.soa.ServiceLoader;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
