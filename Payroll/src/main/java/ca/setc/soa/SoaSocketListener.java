@@ -55,7 +55,7 @@ public class SoaSocketListener extends Thread {
                 sb.append((char) response);
             }
 
-            sb.append(Message.B_EOM);
+            sb.append(new String(Message.B_EOM));
 
             Message request = new Message(sb.toString().getBytes("UTF-8"));
             SoaLogger.receivedRequest(request);
