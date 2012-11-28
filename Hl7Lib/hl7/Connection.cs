@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Purchase_Totaller.hl7
+namespace Hl7Lib
 {
     public class ServiceConnection
     {

@@ -1,4 +1,4 @@
-﻿namespace Purchase_Totaller
+﻿namespace SoaClient
 {
     partial class MainForm
     {

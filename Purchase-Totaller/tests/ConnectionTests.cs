@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Purchase_Totaller.hl7;
+using Hl7Lib;
 using System.Net;
 
-namespace tests
+namespace Hl7LibTests
 {
     [TestClass]
     public class ConnectionTests

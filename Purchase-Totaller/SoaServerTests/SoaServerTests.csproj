@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}</ProjectGuid>
+    <ProjectGuid>{75C1063C-A2CB-42FE-A531-E97CC8DC8989}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>tests</RootNamespace>
-    <AssemblyName>tests</AssemblyName>
+    <RootNamespace>SoaServerTests</RootNamespace>
+    <AssemblyName>SoaServerTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -50,13 +50,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ConnectionTests.cs" />
+    <Compile Include="ServerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Purchase-Totaller.csproj">
-      <Project>{a4c7c5b6-b21a-4e31-bfa2-b72b8692dd71}</Project>
-      <Name>Purchase-Totaller</Name>
+    <ProjectReference Include="..\SoaServer\SoaServer.csproj">
+      <Project>{5d081e1f-4b04-490a-bed6-c1369c4a7c5a}</Project>
+      <Name>SoaServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

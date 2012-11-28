@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoaClient", "SoaClient.csproj", "{A4C7C5B6-B21A-4E31-BFA2-B72B8692DD71}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hl7LibTests", "tests\Hl7LibTests.csproj", "{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hl7Lib", "..\Hl7Lib\Hl7Lib.csproj", "{0DCD503D-456F-408D-BF92-60FED03B9DAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoaServer", "SoaServer\SoaServer.csproj", "{5D081E1F-4B04-490A-BED6-C1369C4A7C5A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{300DF51E-17CE-4795-B61F-ED7B6C3AA7DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoaServerTests", "SoaServerTests\SoaServerTests.csproj", "{75C1063C-A2CB-42FE-A531-E97CC8DC8989}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoaClientTests", "SoaClientTests\SoaClientTests.csproj", "{1246648A-388F-4368-BF2F-BE6298291F03}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4C7C5B6-B21A-4E31-BFA2-B72B8692DD71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C7C5B6-B21A-4E31-BFA2-B72B8692DD71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C7C5B6-B21A-4E31-BFA2-B72B8692DD71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C7C5B6-B21A-4E31-BFA2-B72B8692DD71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DCD503D-456F-408D-BF92-60FED03B9DAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DCD503D-456F-408D-BF92-60FED03B9DAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DCD503D-456F-408D-BF92-60FED03B9DAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DCD503D-456F-408D-BF92-60FED03B9DAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D081E1F-4B04-490A-BED6-C1369C4A7C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D081E1F-4B04-490A-BED6-C1369C4A7C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D081E1F-4B04-490A-BED6-C1369C4A7C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D081E1F-4B04-490A-BED6-C1369C4A7C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{300DF51E-17CE-4795-B61F-ED7B6C3AA7DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{300DF51E-17CE-4795-B61F-ED7B6C3AA7DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{300DF51E-17CE-4795-B61F-ED7B6C3AA7DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{300DF51E-17CE-4795-B61F-ED7B6C3AA7DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75C1063C-A2CB-42FE-A531-E97CC8DC8989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75C1063C-A2CB-42FE-A531-E97CC8DC8989}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75C1063C-A2CB-42FE-A531-E97CC8DC8989}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75C1063C-A2CB-42FE-A531-E97CC8DC8989}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1246648A-388F-4368-BF2F-BE6298291F03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1246648A-388F-4368-BF2F-BE6298291F03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1246648A-388F-4368-BF2F-BE6298291F03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1246648A-388F-4368-BF2F-BE6298291F03}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

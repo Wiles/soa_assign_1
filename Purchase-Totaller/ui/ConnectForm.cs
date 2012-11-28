@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Purchase_Totaller
+namespace Hl7Lib
 {
     public partial class ConnectForm : Form
     {

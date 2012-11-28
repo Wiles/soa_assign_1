@@ -1,5 +1,4 @@
-﻿using Purchase_Totaller.hl7;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,8 +8,9 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Hl7Lib;
 
-namespace Purchase_Totaller
+namespace SoaClient
 {
     public partial class MainForm : Form
     {

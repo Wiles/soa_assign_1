@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Purchase_Totaller.hl7
+namespace Hl7Lib
 {
     public class Response
     {
@@ -15,6 +15,7 @@ namespace Purchase_Totaller.hl7
     public class RegisterTeamResponse : Response
     {
         public int TeamId;
+        public string Expiration;
     }
 
     public class UnRegisterTeamResponse : Response
@@ -155,7 +156,7 @@ namespace Purchase_Totaller.hl7
                 try
                 {
                     response.TeamId = int.Parse(teamId);
-                    // TODO: Expiration
+                    response.Expiration = expiration;
 
                     return response;
                 }

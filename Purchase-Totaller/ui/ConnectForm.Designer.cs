@@ -1,4 +1,4 @@
-﻿namespace Purchase_Totaller
+﻿namespace Hl7Lib
 {
     partial class ConnectForm
     {
