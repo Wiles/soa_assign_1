@@ -68,7 +68,7 @@ public final class Main {
 
             log.info("Team Id: {}", teamId);
 
-            soa.publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), services.get(Config.get("Tag")));
+            soa.publishService(Config.get("service.ip"), Integer.parseInt(Config.get("service.publish.port")), services.get(Config.get("Tag")));
 
             KeepAlive ka = new KeepAlive();
             ka.start();
