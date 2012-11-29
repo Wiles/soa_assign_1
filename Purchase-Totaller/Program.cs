@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Purchase_Totaller
+namespace SoaClient
 {
     static class Program
     {
+        public static string ConfigName = "client";
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>

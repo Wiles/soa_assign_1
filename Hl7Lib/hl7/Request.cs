@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Purchase_Totaller.hl7
+namespace Hl7Lib
 {
     public class Request
     {

@@ -1,13 +1,13 @@
-﻿using Purchase_Totaller.hl7;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Hl7Lib;
 
-namespace Purchase_Totaller.logic
+namespace SoaServer
 {
     class PurchaseTotaller : IDisposable
     {
@@ -24,6 +24,11 @@ namespace Purchase_Totaller.logic
         public void Dispose()
         {
             socket.Dispose();
+        }
+
+        public void RegisterService()
+        {
+            // TODO: Register the service
         }
 
         public void Listen()
