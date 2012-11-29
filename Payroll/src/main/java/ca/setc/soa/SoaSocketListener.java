@@ -6,6 +6,7 @@ import ca.setc.hl7.ServiceRequest;
 import ca.setc.messaging.MessageBuilder;
 import ca.setc.service.SoaMethod;
 import ca.setc.service.SoaService;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,31 +75,32 @@ public class SoaSocketListener extends Thread {
             writer.flush();
 
         }
-        catch (SoaException e) {
-            log.error(e.getMessage(), e);
-            if(writer != null)
-            {
-                try
-                {
-                    Message m = mb.error(e);
-                    SoaLogger.respond(m);
-                    writer.write(m.toHl7());
-                    writer.flush();
-                }
-                catch(IOException ex)
-                {
-                    log.error("Could not write response", ex);
-                }
-            }
-        }
         catch(Exception e)
         {
             log.error(e.getMessage(), e);
+            SoaException root = null;
+            if(ExceptionUtils.getRootCause(e) instanceof SoaException)
+            {
+                root = (SoaException)ExceptionUtils.getRootCause(e);
+            }
+            else if (e instanceof SoaException)
+            {
+                root = (SoaException)e;
+            }
+
             if(writer != null)
             {
                 try
                 {
-                    Message m = mb.error(new SoaException(e));
+                    Message m;
+                    if(root != null)
+                    {
+                        m = mb.error(root);
+                    }
+                    else
+                    {
+                        m = mb.error(new SoaException(e));
+                    }
                     SoaLogger.respond(m);
                     writer.write(m.toHl7());
                     writer.flush();
