@@ -171,7 +171,8 @@ public final class SoaRegistry {
                    error.equals("Team '" + teamName + "' (ID : " + teamId + ") is not registered"))
                 {
                     registerTeam(false);
-                    publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), ServiceLoader.getService(Config.get("Tag")), false);
+                    publishService(Config.get("service.ip"), Integer.parseInt(Config.get("service.publish.port")), ServiceLoader.getService(Config.get("Tag")), false);
+                    sendMessage(message, false);
                 }
 
                 throw new SoaException(codeNumber, error);
