@@ -53,10 +53,6 @@
       <Project>{0dcd503d-456f-408d-bf92-60fed03b9dab}</Project>
       <Name>Hl7Lib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{300df51e-17ce-4795-b61f-ed7b6c3aa7da}</Project>
-      <Name>Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

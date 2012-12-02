@@ -21,6 +21,7 @@ namespace SoaClient
         private int port;
         private string serviceTag;
         private string teamName;
+        private int teamId;
 
         public MainForm()
         {
@@ -40,13 +41,17 @@ namespace SoaClient
             {
                 try
                 {
+                    argGrid.Rows.Clear();
+                    respGrid.Rows.Clear();
+
                     address = form.Address;
                     port = form.Port;
                     serviceTag = form.ServiceTag;
                     teamName = form.TeamName;
 
-                    connection = new ServiceConnection(teamName, IPAddress.Parse(address), port);
-                    connection.Register();
+                    connection = new ServiceConnection(Program.Logger, teamName, IPAddress.Parse(address), port);
+                    var registerResponse = connection.Register();
+                    teamId = registerResponse.TeamId;
                     if (connection.IsRegistered())
                     {
                         runToolStripMenuItem1.Enabled = true;
@@ -69,6 +74,9 @@ namespace SoaClient
                         {
                             respGrid.Rows.Add(new object[] { resp.Name, ServiceArgument.TypeToString(resp.DataType), resp.Value });
                         }
+
+                        toolStripStatusLabel.Text = String.Format("Service IP: {0}, Port: {1}, ServiceName: {2}, Description: {3}", 
+                            queriedService.Ip.ToString(), queriedService.Port, queriedService.Name, queriedService.Description);
                     }
                     else
                     {
@@ -89,35 +97,114 @@ namespace SoaClient
 
         private void runToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            // TODO: Check if connection is registered
-
-            var call = new RemoteServiceCall(serviceTag, teamName, (int)connection.TeamId);
-
-            int i = 1;
-            foreach (DataGridViewRow row in argGrid.Rows)
+            try
             {
-                var argName = row.Cells[0].Value.ToString();
-                var argDataType= ServiceArgument.TypeFromString(row.Cells[1].Value.ToString());
-                var argMandatory = bool.Parse(row.Cells[2].Value.ToString());
-                var argValue = row.Cells[3].Value.ToString();
+                // Re-register the client every time
+                connection.Register();
 
-                var arg = new ServiceArgument(i++, argName, argDataType, argMandatory);
-                arg.Value = argValue;
-                call.Args.Add(arg);
+                var ip = queriedService.Ip;
+                var port = queriedService.Port;
+
+                try
+                {
+                    queriedService = connection.QueryService(serviceTag).Service;
+                }
+                catch (Exception)
+                {
+                    throw new Exception("Service is no longer registered");
+                }
+
+                var serviceConnection = new ServiceConnection(Program.Logger, teamName, ip, port, false, connection.TeamId);
+
+                var call = new RemoteServiceCall(queriedService.Name, teamName, (int)connection.TeamId);
+
+                int i = 1;
+                foreach (DataGridViewRow row in argGrid.Rows)
+                {
+                    var argName = row.Cells[0].Value.ToString();
+                    var argDataType = ServiceArgument.TypeFromString(row.Cells[1].Value.ToString());
+                    var argMandatory = bool.Parse(row.Cells[2].Value.ToString());
+                    var argValue = row.Cells[3].Value.ToString();
+
+                    try
+                    {
+                        switch (argDataType)
+                        {
+                            case ServiceDataType.Tint:
+                                int.Parse(argValue);
+                                break;
+                            case ServiceDataType.Tdouble:
+                                double.Parse(argValue);
+                                break;
+                            case ServiceDataType.Tfloat:
+                                float.Parse(argValue);
+                                break;
+                            case ServiceDataType.Tchar:
+                                if (argValue.Length > 1)
+                                {
+                                    throw new FormatException("Char field must be 1 character");
+                                }
+                                break;
+                            case ServiceDataType.Tshort:
+                                short.Parse(argValue);
+                                break;
+                            case ServiceDataType.Tlong:
+                                long.Parse(argValue);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        throw new FormatException("Please enter a proper value for: " + argName);
+                    }
+
+                    if (argMandatory)
+                    {
+                        if (String.IsNullOrWhiteSpace(argValue))
+                        {
+                            throw new FormatException("Please enter a value for: " + argName);
+                        }
+                    }
+
+                    var arg = new ServiceArgument(i++, argName, argDataType, argMandatory);
+                    arg.Value = argValue;
+                    call.Args.Add(arg);
+                }
+
+                i = 1;
+                foreach (DataGridViewRow row in respGrid.Rows)
+                {
+                    var respName = row.Cells[0].Value.ToString();
+                    var respDataType = ServiceArgument.TypeFromString(row.Cells[1].Value.ToString());
+                    var respValue = "";
+
+                    var ret = new ServiceReturn(i++, respName, respDataType, respValue);
+                    call.Returns.Add(ret);
+                }
+
+                var executeResponse = serviceConnection.ExecuteService(call);
+                foreach (var ret in executeResponse.Returned.Returns)
+                {
+                    foreach (DataGridViewRow row in respGrid.Rows)
+                    {
+                        var respName = row.Cells[0].Value.ToString();
+                        if (respName == ret.Name)
+                        {
+                            var respDataType = ServiceArgument.TypeFromString(row.Cells[1].Value.ToString());
+                            row.Cells[2].Value = ret.Value;
+                            
+                            break;
+                        }
+                    }
+                    
+                }
             }
-
-            i = 1;
-            foreach (DataGridViewRow row in respGrid.Rows)
+            catch (Exception ex)
             {
-                var respName = row.Cells[0].Value.ToString();
-                var respDataType = ServiceArgument.TypeFromString(row.Cells[1].Value.ToString());
-                var respValue = row.Cells[2].Value.ToString();
-
-                var ret = new ServiceReturn(i++, respName, respDataType, respValue);
-                call.Returns.Add(ret);
+                MessageBox.Show("Error executing service, because: " + ex.Message);
             }
-
-            connection.ExecuteService(call);
         }
     }
 }

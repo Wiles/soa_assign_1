@@ -20,11 +20,11 @@ namespace Shared
         /// Gets the singleton instance.
         /// </summary>
         /// <returns>The singleton instance</returns>
-        public static Logger GetInstance(string name)
+        public static Logger GetInstance(string name = "")
         {
             if (instance == null)
             {
-                instance = new Logger(String.Format(@"C:\temp\log.txt", name));
+                instance = new Logger(String.Format(@"C:\temp\log{0}.txt", name));
             }
 
             return instance;

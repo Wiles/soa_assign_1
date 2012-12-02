@@ -120,19 +120,38 @@ namespace Hl7Lib
         Tlong
     }
 
-    public class ServiceReturn
+    public struct ServiceReturn
     {
         public readonly int Position;
         public readonly string Name;
         public readonly ServiceDataType DataType;
-        public readonly string Value;
+
+        private object value;
+        public object Value
+        {
+            get
+            {
+                if (value == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return value.ToString();
+                }
+            }
+            set
+            {
+                this.value = value;
+            }
+        }
 
         public ServiceReturn(int pos, string name, ServiceDataType dataType, string value = "")
         {
             this.Position = pos;
             this.Name = name;
             this.DataType = dataType;
-            this.Value = value;
+            this.value = value;
         }
     }
 }

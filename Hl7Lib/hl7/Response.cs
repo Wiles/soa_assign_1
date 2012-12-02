@@ -10,6 +10,10 @@ namespace Hl7Lib
 {
     public class Response
     {
+        public static string CleanContents(string responseContents)
+        {
+            return responseContents.Replace("\0", "").Replace(Request.BeginMarker, "").Replace(Request.EndOfMessage, "");
+        }
     }
 
     public class RegisterTeamResponse : Response
@@ -41,7 +45,7 @@ namespace Hl7Lib
 
     public class ExecuteServiceResponse : Response
     {
-        private RemoteServiceReturn Returned;
+        public readonly RemoteServiceReturn Returned;
 
         public ExecuteServiceResponse(RemoteServiceReturn returned)
         {
@@ -60,19 +64,38 @@ namespace Hl7Lib
             this.ErrorMessage = errorMessage;
             this.Exception = new FailureResponseException(errorCode, errorMessage);
         }
+
+        public string ToHl7()
+        {
+            var sb = new StringBuilder();
+            sb.Append(String.Format("SOA|NOT-OK|{0}|{1}||{2}", ErrorCode, ErrorMessage, Request.NewRow));
+
+            return Request.BeginMarker + sb.ToString() + Request.EndOfMessage;
+        }
+
+        public override string ToString()
+        {
+            return ToHl7();
+        }
     }
 
     public class FailureResponseException : Exception
     {
+        public readonly string ErrorCode;
+        public readonly string ErrorMessage;
+
         public FailureResponseException(FailureResponse response) 
             : base(String.Format("Error: {0}, because {1}", response.ErrorCode, response.ErrorMessage))
         {
-
+            this.ErrorCode = response.ErrorCode;
+            this.ErrorMessage = response.ErrorMessage;
         }
 
         public FailureResponseException(string errorCode, string errorMessage, Exception e = null)
             : base(String.Format("Error: {0}, because {1}", errorCode, errorMessage), e)
         {
+            this.ErrorCode = errorCode;
+            this.ErrorMessage = errorMessage;
         }
     }
 
@@ -175,7 +198,7 @@ namespace Hl7Lib
             {
                 var fullRequest = (QueryTeamRequest)request;
                 var response = new QueryTeamResponse();
-                // TODO: Query Team Response
+
                 return response;
             }
             else if (request is PublishServiceRequest)
@@ -192,11 +215,12 @@ namespace Hl7Lib
                 var serviceName = rows[1][2];
                 var numArgs = int.Parse(rows[1][4]);
                 var numResponses = int.Parse(rows[1][5]);
+                var description = rows[1][6];
 
                 var mchIndex = 2 + numArgs + numResponses;
                 var ip = rows[mchIndex][1];
                 var port = int.Parse(rows[mchIndex][2]);
-                var service = new RemoteService(IPAddress.Parse(ip), port, serviceName, fullRequest.TagName);
+                var service = new RemoteService(IPAddress.Parse(ip), port, serviceName, fullRequest.TagName, 1, description);
 
                 var response = new QueryServiceResponse(service);
                 // Read the args
@@ -243,48 +267,22 @@ namespace Hl7Lib
                 var fullRequest = (ExecuteServiceRequest)request;
 
                 var numSegments = int.Parse(rows[0][4]);
-                var name = rows[1][2];
-                var numArgs = int.Parse(rows[1][4]);
-                var numResponses = int.Parse(rows[1][5]);
+                var name = rows[0][2];
+                var numResponses = int.Parse(rows[0][4]);
                     
                 var returnedCall = new RemoteServiceReturn(name);
 
-                for (int arg = 0; arg < numArgs; arg++)
-                {
-                    var row = rows[1 + arg];
-                    Debug.Assert(row[0] == "ARG");
-
-                    var pos = int.Parse(row[1]);
-                    var argName = row[2];
-                    var dataType = row[3];
-                    bool? mandatory = null;
-
-                    try 
-	                {
-                        // This is optional
-		                mandatory = row[4].Equals("mandatory", StringComparison.CurrentCultureIgnoreCase);
-	                }
-	                catch (Exception)
-	                {
-                        // Ignore..
-	                }
-
-                    var serviceArgument = new ServiceArgument(pos, argName, dataType, 
-                        ((mandatory == null) ? false : (bool)mandatory));
-                    returnedCall.Args.Add(serviceArgument);
-                }
-
-
                 for (int resp = 0; resp < numResponses; resp++)
                 {
-                    var row = rows[1 + numArgs + resp];
+                    var row = rows[1 + resp];
                     Debug.Assert(row[0] == "RSP");
 
                     var pos = int.Parse(row[1]);
                     var argName = row[2];
                     var dataType = row[3];
+                    var value = row[4];
 
-                    var serviceReturn = new ServiceReturn(pos, argName, ServiceArgument.TypeFromString(dataType));
+                    var serviceReturn = new ServiceReturn(pos, argName, ServiceArgument.TypeFromString(dataType), value);
                     returnedCall.Returns.Add(serviceReturn);
                 }
 

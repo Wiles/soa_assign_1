@@ -12,7 +12,7 @@ namespace Hl7Lib
         public readonly static string NewRow = ((char)13).ToString();
         public readonly static string BeginMarker = ((char)11).ToString();
         public readonly static string EndMarker = ((char)28).ToString();
-        public readonly static string EndOfMessage = new string(new char[] { ((char)28), ((char)13), ((char)10) });
+        public readonly static string EndOfMessage = new string(new char[] { ((char)13), ((char)28), ((char)13) });
 
         public readonly string Id;
         public readonly string TeamName;
@@ -152,7 +152,6 @@ namespace Hl7Lib
             Contents.Add(call.Args.Count.ToString());
             Contents.Add("");
             Contents.Add("");
-            Contents.Add("");
             Contents.Add(NewRow);
 
             for (int i = 0; i < call.Args.Count; i++)
@@ -183,48 +182,144 @@ namespace Hl7Lib
             var rows = (from l in lines
                         select l.Split(Request.Delimiter.ToCharArray())).ToArray();
 
-            var isOk = rows[0][1].Equals("ok", StringComparison.CurrentCultureIgnoreCase);
-            if (isOk)
+            var teamName = rows[0][2];
+            var teamId = int.Parse(rows[0][3]);
+            var serviceName = rows[1][2];
+            var numSegments = int.Parse(rows[1][4]);
+
+            var call = new RemoteServiceCall(serviceName, teamName, teamId);
+            var request = new ExecuteServiceServerRequest(call);
+            for (int i = 0; i < numSegments; i++)
             {
-                var serviceName = rows[1][2];
-                var numSegments = int.Parse(rows[1][4]);
+                var row = rows[2 + i];
+                var pos = int.Parse(row[1]);
+                var respName = row[2];
+                var dataType = ServiceArgument.TypeFromString(row[3]);
+                var value = row[5];
 
-                var call = new RemoteServiceCall(serviceName);
-                var request = new ExecuteServiceServerRequest(call);
-                for (int i = 0; i < numSegments; i++)
-                {
-                    var row = rows[2 + i];
-                    var pos = int.Parse(row[1]);
-                    var respName = row[2];
-                    var dataType = ServiceArgument.TypeFromString(row[3]);
-                    var value = row[5];
-
-                    var arg = new ServiceArgument(pos, respName, dataType);
-                    arg.Value = value;
-                    call.Args.Add(arg);
-                }
-
-                return request;
+                var arg = new ServiceArgument(pos, respName, dataType);
+                arg.Value = value;
+                call.Args.Add(arg);
             }
-            else
-            {
-                throw new FailureRequestException("-6", "");
-            }
+
+            return request;
         }
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public class ExecuteServiceServerResponse
+    public class PurchaseTotallerResponse
     {
-        public ExecuteServiceServerResponse(double purchaseAmount, string province)
+        public static readonly ServiceReturn SubTotalReturn = new ServiceReturn(1, "SubTotal", ServiceDataType.Tdouble);
+        public static readonly ServiceReturn PstReturn = new ServiceReturn(2, "PST", ServiceDataType.Tdouble);
+        public static readonly ServiceReturn HstReturn = new ServiceReturn(3, "HST", ServiceDataType.Tdouble);
+        public static readonly ServiceReturn GstReturn = new ServiceReturn(4, "GST", ServiceDataType.Tdouble);
+        public static readonly ServiceReturn TotalReturn = new ServiceReturn(5, "Total", ServiceDataType.Tdouble);
+
+        private class ProvinceTaxRate
         {
+            public readonly string Code;
+            public readonly string Province;
+            public readonly double Hst;
+            public readonly double Pst;
+            public readonly double Gst;
+
+            public ProvinceTaxRate(string code, string province, double hst, double pst, double gst)
+            {
+                this.Code = code;
+                this.Province = province;
+                this.Hst = hst;
+                this.Pst = pst;
+                this.Gst = gst;
+            }
+
+        }
+
+        private readonly List<ProvinceTaxRate> taxRates = new List<ProvinceTaxRate>(new ProvinceTaxRate[]
+        {
+            new ProvinceTaxRate("NL", "Newfoundland", 13.0, 0.0, 0.0),
+            new ProvinceTaxRate("NS", "Nova Scotia", 15.0, 0.0, 0.0),
+            new ProvinceTaxRate("NB", "New Brunswick", 13.0, 0.0, 0.0),
+            new ProvinceTaxRate("PE", "Prince Edward Island", 0.0, 10.0, 5.0),
+            new ProvinceTaxRate("QC", "Quebec", 0.0, 9.5, 5.0),
+            new ProvinceTaxRate("ON", "Ontario", 13.0, 0.0, 0.0),
+            new ProvinceTaxRate("MB", "Manitoba", 0.0, 7.0, 5.0),
+            new ProvinceTaxRate("SK", "Saskatchewan", 0.0, 5.0, 5.0),
+            new ProvinceTaxRate("AB", "Albert", 0.0, 0.0, 5.0),
+            new ProvinceTaxRate("BC", "British Columbia", 12.0, 0.0, 0.0),
+            new ProvinceTaxRate("YT", "Yukon", 0.0, 0.0, 5.0),
+            new ProvinceTaxRate("NT", "Northwest Territories", 0.0, 0.0, 5.0),
+            new ProvinceTaxRate("NU", "Nunavut", 0.0, 0.0, 5.0)
+        });
+
+        private readonly string provinceCode;
+        private readonly double purchaseAmount;
+
+        public PurchaseTotallerResponse(string provinceCode, double purchaseAmount)
+        {
+            this.provinceCode = provinceCode;
+            this.purchaseAmount = purchaseAmount;
         }
 
         public string ToHl7()
         {
-            throw new NotImplementedException();
+            var taxRate = (from t in taxRates
+                           where t.Code == provinceCode
+                           select t).FirstOrDefault();
+
+            if (taxRate == null)
+            {
+                throw new Exception("Unknown provinceCode == " + provinceCode);
+            }
+
+            // Perform the calculations
+            var subtotal = purchaseAmount;
+            var hst = (taxRate.Hst / 100) * subtotal;
+            var gst = (taxRate.Gst / 100) * subtotal;
+            var pst = 0.0;
+            if (provinceCode == "QC" || provinceCode == "PE")
+            {
+                pst = (taxRate.Pst / 100) * (subtotal + gst);
+            }
+            else
+            {
+                pst = (taxRate.Pst / 100) * subtotal;
+            }
+
+            var total = subtotal + pst + hst + gst;
+
+            // Create the return values
+            var sr = SubTotalReturn;
+            sr.Value = subtotal;
+
+            var pr = PstReturn;
+            pr.Value = pst;
+
+            var hr = HstReturn;
+            hr.Value = hst;
+
+            var gr = GstReturn;
+            gr.Value = gst;
+
+            var tr = TotalReturn;
+            tr.Value = total;
+
+            // Create HL7
+            var sb = new StringBuilder();
+            sb.Append(String.Format("PUB|OK|||{0}|{1}", 5, Request.NewRow));
+            foreach (var ret in new ServiceReturn[] { sr, pr, hr, gr, tr })
+            {
+                sb.Append(String.Format("RSP|{0}|{1}|{2}|{3}|{4}",
+                    ret.Position, ret.Name, ServiceArgument.TypeToString(ret.DataType), ret.Value, Request.NewRow));
+            }
+
+            return Request.BeginMarker + sb.ToString() + Request.EndOfMessage;
+        }
+
+        public override string ToString()
+        {
+            return ToHl7();
         }
     }
 
@@ -232,7 +327,8 @@ namespace Hl7Lib
     {
         public readonly string ErrorCode;
         public readonly string ErrorMessage;
-        public FailureRequestException(string errorCode, string errorMessage)
+        public FailureRequestException(string errorCode, string errorMessage) :
+            base(String.Format("Error: {0}, {1}", errorCode, errorMessage))
         {
             this.ErrorCode = errorCode;
             this.ErrorMessage = errorMessage;

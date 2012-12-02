@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Hl7Lib;
 using System.Net;
+using Shared;
 
 namespace Hl7LibTests
 {
@@ -11,7 +12,7 @@ namespace Hl7LibTests
         [TestMethod]
         public void TestPublish()
         {
-            var connection = new ServiceConnection("Bob");
+            var connection = new ServiceConnection(Logger.GetInstance(), "Bob");
             connection.Register();
 
             var service = new RemoteService(IPAddress.Parse("127.0.0.1"), 5453,
@@ -29,7 +30,7 @@ namespace Hl7LibTests
         [TestMethod]
         public void TestRegisterTeam()
         {
-            var connection = new ServiceConnection("Bob");
+            var connection = new ServiceConnection(Logger.GetInstance(), "Bob");
             var response = connection.Register();
 
             Assert.IsTrue(connection.TeamName == "Bob");
@@ -41,7 +42,7 @@ namespace Hl7LibTests
         [TestMethod]
         public void TestUnRegisterTeam()
         {
-            var connection = new ServiceConnection("Bob");
+            var connection = new ServiceConnection(Logger.GetInstance(), "Bob");
             connection.Register();
 
             var response = connection.UnRegister();
@@ -54,7 +55,7 @@ namespace Hl7LibTests
         public void TestQueryTeam()
         {
             var teamname = "Bob";
-            var connection = new ServiceConnection(teamname);
+            var connection = new ServiceConnection(Logger.GetInstance(), teamname);
             int teamId = connection.Register().TeamId;
 
             var serviceName = "Service1";
@@ -76,7 +77,7 @@ namespace Hl7LibTests
         [TestMethod]
         public void QueryServiceMessage()
         {
-            var connection = new ServiceConnection("Bob");
+            var connection = new ServiceConnection(Logger.GetInstance(), "Bob");
             connection.Register();
 
             connection.QueryService("GIORP-TOTAL");
@@ -85,7 +86,7 @@ namespace Hl7LibTests
         [TestMethod]
         public void ExecuteServiceMessage()
         {
-            var connection = new ServiceConnection("Bob");
+            var connection = new ServiceConnection(Logger.GetInstance(), "Bob");
             connection.Register();
 
             var service = "GIORP-TOTAL";
