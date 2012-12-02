@@ -8,56 +8,126 @@ using System.Threading.Tasks;
 
 namespace Hl7Lib
 {
+    /// <summary>
+    /// Base class for all responses
+    /// </summary>
     public class Response
     {
+        /// <summary>
+        /// Clean the HL7 of a request or response
+        /// 
+        /// Remove '\0', Beginning Marker and Ending marker
+        /// </summary>
+        /// <param name="responseContents">HL7</param>
+        /// <returns>Cleaned contents</returns>
         public static string CleanContents(string responseContents)
         {
             return responseContents.Replace("\0", "").Replace(Request.BeginMarker, "").Replace(Request.EndOfMessage, "");
         }
     }
 
+    /// <summary>
+    /// Register team response
+    /// </summary>
     public class RegisterTeamResponse : Response
     {
+        /// <summary>
+        /// Team ID
+        /// </summary>
         public int TeamId;
+
+        /// <summary>
+        /// Expiration Time
+        /// </summary>
         public string Expiration;
     }
 
+    /// <summary>
+    /// Unregister team response
+    /// </summary>
     public class UnRegisterTeamResponse : Response
     {
     }
 
+    /// <summary>
+    /// Query team response
+    /// </summary>
     public class QueryTeamResponse : Response
     {
     }
 
+    /// <summary>
+    /// Publish service response
+    /// </summary>
     public class PublishServiceResponse : Response
     {
     }
 
+    /// <summary>
+    /// Query service response
+    /// </summary>
     public class QueryServiceResponse : Response
     {
+        /// <summary>
+        /// Remote service
+        /// </summary>
         public readonly RemoteService Service;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="service">Remote service</param>
         public QueryServiceResponse(RemoteService service)
         {
             this.Service = service;
         }
     }
 
+    /// <summary>
+    /// Execute service response
+    /// </summary>
     public class ExecuteServiceResponse : Response
     {
+        /// <summary>
+        /// Return values
+        /// </summary>
         public readonly RemoteServiceReturn Returned;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="returned">Return values</param>
         public ExecuteServiceResponse(RemoteServiceReturn returned)
         {
             this.Returned = returned;
         }
     }
 
+    /// <summary>
+    /// Failure response (in the case of an error)
+    /// </summary>
     public class FailureResponse : Response
     {
+        /// <summary>
+        /// Error code
+        /// </summary>
         public readonly string ErrorCode;
+
+        /// <summary>
+        /// Error message
+        /// </summary>
         public readonly string ErrorMessage;
+
+        /// <summary>
+        /// Exception (if associated)
+        /// </summary>
         public readonly FailureResponseException Exception;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="errorCode">Error code</param>
+        /// <param name="errorMessage">Error message</param>
         public FailureResponse(string errorCode, string errorMessage)
         {
             this.ErrorCode = errorCode;
@@ -65,6 +135,10 @@ namespace Hl7Lib
             this.Exception = new FailureResponseException(errorCode, errorMessage);
         }
 
+        /// <summary>
+        /// Convert to HL7
+        /// </summary>
+        /// <returns>HL7</returns>
         public string ToHl7()
         {
             var sb = new StringBuilder();
@@ -73,17 +147,35 @@ namespace Hl7Lib
             return Request.BeginMarker + sb.ToString() + Request.EndOfMessage;
         }
 
+        /// <summary>
+        /// Convert to HL7
+        /// </summary>
+        /// <returns>HL7</returns>
         public override string ToString()
         {
             return ToHl7();
         }
     }
 
+    /// <summary>
+    /// Exception that encapsulates a failure response
+    /// </summary>
     public class FailureResponseException : Exception
     {
+        /// <summary>
+        /// Error code
+        /// </summary>
         public readonly string ErrorCode;
+
+        /// <summary>
+        /// Error message
+        /// </summary>
         public readonly string ErrorMessage;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="response">Failure response</param>
         public FailureResponseException(FailureResponse response) 
             : base(String.Format("Error: {0}, because {1}", response.ErrorCode, response.ErrorMessage))
         {
@@ -91,6 +183,12 @@ namespace Hl7Lib
             this.ErrorMessage = response.ErrorMessage;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="errorCode">Error code</param>
+        /// <param name="errorMessage">Error message</param>
+        /// <param name="e">Exception (if associated)</param>
         public FailureResponseException(string errorCode, string errorMessage, Exception e = null)
             : base(String.Format("Error: {0}, because {1}", errorCode, errorMessage), e)
         {
@@ -99,20 +197,36 @@ namespace Hl7Lib
         }
     }
 
-
+    /// <summary>
+    /// Invalid response type (could not match the message to a response type)
+    /// </summary>
     public class InvalidResponseTypeException : Exception
     {
+        /// <summary>
+        /// </summary>
         public InvalidResponseTypeException()
         {
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message">Error message</param>
+        /// <param name="e">Base exception</param>
         public InvalidResponseTypeException(string message, Exception e): base(message, e)
         {
         }
     }
 
+    /// <summary>
+    /// Response factory, responsible for creating responses
+    /// </summary>
     public class ResponseFactory
     {
+        /// <summary>
+        /// Is the response an non-failure?
+        /// </summary>
+        /// <param name="message">HL7</param>
+        /// <returns></returns>
         private bool IsOkMessage(string message)
         {
             try
@@ -125,6 +239,11 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// Create a failure response from a message
+        /// </summary>
+        /// <param name="message">HL7</param>
+        /// <returns></returns>
         private FailureResponse CreateFailureException(string message)
         {
             try
@@ -148,7 +267,12 @@ namespace Hl7Lib
             }
         }
 
-        public List<string[]> ExtractRows(string message)
+        /// <summary>
+        /// Extract the rows of an HL7 message
+        /// </summary>
+        /// <param name="message">HL7</param>
+        /// <returns></returns>
+        private List<string[]> ExtractRows(string message)
         {
             var rows = new List<string[]>();
             var lines = message.Split(Request.NewRow.ToCharArray());
@@ -160,6 +284,12 @@ namespace Hl7Lib
             return rows;
         }
 
+        /// <summary>
+        /// Create the response from a message and HL7 response content
+        /// </summary>
+        /// <param name="request">Request made</param>
+        /// <param name="message">HL7 response content</param>
+        /// <returns></returns>
         public Response FromMessage(Request request, string message)
         {
             if (!IsOkMessage(message))

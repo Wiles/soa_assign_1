@@ -9,11 +9,24 @@ using Shared;
 
 namespace Hl7Lib
 {
+    /// <summary>
+    /// Connection to a valid Soa1 registry or service
+    /// </summary>
     public class ServiceConnection
     {
+        /// <summary>
+        /// Name of connecting team
+        /// </summary>
         public readonly string TeamName;
 
+        /// <summary>
+        /// ID of connected team
+        /// </summary>
         private int? teamId = null;
+
+        /// <summary>
+        /// ID of connected team
+        /// </summary>
         public int? TeamId
         {
             get
@@ -22,16 +35,47 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// Logger for logging events
+        /// </summary>
         private readonly Logger logger;
+        /// <summary>
+        /// IP address of registry or service
+        /// </summary>
         private readonly IPAddress ip;
+        /// <summary>
+        /// Port of registry or service
+        /// </summary>
         private readonly int port;
+        /// <summary>
+        /// Enforce that the client must be registered, before
+        /// any requests can be made
+        /// </summary>
         private readonly bool enforceRegister;
+
+        /// <summary>
+        /// </summary>
+        /// <param name="logger">Logger</param>
+        /// <param name="teamName">Name of client team</param>
         public ServiceConnection(Logger logger, string teamName)
             : this(logger, teamName, IPAddress.Parse("127.0.0.1"), 3128)
         {
         }
 
-        public ServiceConnection(Logger logger, string teamName, IPAddress ip, int port, bool enforceRegister = true, int? teamId = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger">Logger for events</param>
+        /// <param name="teamName">Name of client team</param>
+        /// <param name="ip">IP address of registry or service</param>
+        /// <param name="port">Port of registry or service</param>
+        /// <param name="enforceRegister">
+        /// Enforce that the client must be registered, before
+        /// any requests can be made
+        /// </param>
+        /// <param name="teamId">ID of connected team</param>
+        public ServiceConnection(Logger logger, string teamName, IPAddress ip, 
+            int port, bool enforceRegister = true, int? teamId = null)
         {
             this.TeamName = teamName;
             this.ip = ip;
@@ -41,6 +85,11 @@ namespace Hl7Lib
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Issue a request to the registry or service
+        /// </summary>
+        /// <param name="request">Request to issue</param>
+        /// <returns>Response received</returns>
         private Response IssueRequest(Request request)
         {
             var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -120,6 +169,10 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// Register with the registry (may not register with a service)
+        /// </summary>
+        /// <returns>Response</returns>
         public RegisterTeamResponse Register()
         {
             var request = new RegisterTeamRequest(TeamName);
@@ -137,6 +190,10 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// UnRegister with the registry (may not unregister with a service)
+        /// </summary>
+        /// <returns>Response</returns>
         public UnRegisterTeamResponse UnRegister()
         {
             EnforceRegistered();
@@ -153,6 +210,11 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// Publish a service to the registry
+        /// </summary>
+        /// <param name="service">Service to publish</param>
+        /// <returns>Response</returns>
         public PublishServiceResponse Publish(RemoteService service)
         {
             EnforceRegistered();
@@ -168,6 +230,13 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// Query a team to see if they have privileges to execute a certain service tag
+        /// </summary>
+        /// <param name="queryTeamName">Name of team</param>
+        /// <param name="queryTeamId">ID of team</param>
+        /// <param name="serviceTag">Service tag</param>
+        /// <returns>Response</returns>
         public QueryTeamResponse QueryTeam(string queryTeamName, int queryTeamId, string serviceTag)
         {
             EnforceRegistered();
@@ -184,6 +253,11 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// Query a service by service tag
+        /// </summary>
+        /// <param name="serviceTag">Service tag</param>
+        /// <returns>Response</returns>
         public QueryServiceResponse QueryService(string serviceTag)
         {
             EnforceRegistered();
@@ -200,6 +274,11 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// Execute service
+        /// </summary>
+        /// <param name="call">Execution information</param>
+        /// <returns>Response</returns>
         public ExecuteServiceResponse ExecuteService(RemoteServiceCall call)
         {
             EnforceRegistered();
@@ -216,6 +295,12 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// Is the connection registered?
+        /// WARNING: FOR NOW THIS IS A LOCAL CHECK AND DOES NOT ACTUALLY
+        /// CHECK WITH THE REGISTRY
+        /// </summary>
+        /// <returns></returns>
         public bool IsRegistered()
         {
             // TODO: Double check with the server
@@ -223,6 +308,9 @@ namespace Hl7Lib
             return registered;
         }
 
+        /// <summary>
+        /// Enforce that the client is locally registered
+        /// </summary>
         private void EnforceRegistered()
         {
             if (enforceRegister && !IsRegistered())
@@ -231,11 +319,23 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// Is this response a failure?
+        /// </summary>
+        /// <param name="response">Response to check</param>
+        /// <returns>Whether the response is a failure response</returns>
         private bool IsFailureResponse(Response response)
         {
             return response is FailureResponse;
         }
 
+        /// <summary>
+        /// Convert a response to a failure exception if the response is a failure response.
+        /// 
+        /// Otherwise, invalid response type exception
+        /// </summary>
+        /// <param name="response">Response</param>
+        /// <returns>Exception</returns>
         public Exception ThrowFailureResponse(Response response)
         {
             if (IsFailureResponse(response))
@@ -249,12 +349,21 @@ namespace Hl7Lib
         }
     }
 
+    /// <summary>
+    /// Client is not registered exception
+    /// </summary>
     public class NotRegisteredException : Exception
     {
+        /// <summary>
+        /// </summary>
         public NotRegisteredException()
         {
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="message">Error message</param>
+        /// <param name="e">Base exception</param>
         public NotRegisteredException(string message, Exception e)
             : base(message, e)
         {
