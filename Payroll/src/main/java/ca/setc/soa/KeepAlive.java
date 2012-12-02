@@ -23,7 +23,7 @@ public class KeepAlive extends Thread {
             try
             {
                 soa.registerTeam();
-                soa.publishService(Config.get("registry.ip"), Integer.parseInt(Config.get("service.publish.port")), ServiceLoader.getService(Config.get("Tag")));
+                soa.publishService(Config.get("service.ip"), Integer.parseInt(Config.get("service.publish.port")), ServiceLoader.getService(Config.get("Tag")));
             }
             catch(Exception ignore)
             {

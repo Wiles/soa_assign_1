@@ -130,9 +130,14 @@ public class SoaService {
 
         for (int i = 0; i < params.length; ++i) {
             SoaParameter param = meth.getParameters().get(i);
-            if (param.getType() == Double.class) {
+            if((params[i] == null || params[i].equals("")) && param.getType() != String.class)
+            {
+                paramList.add(null);
+            }
+            else if (param.getType() == Double.class) {
                 paramList.add(Double.parseDouble(params[i]));
-            } else if (param.getType() == double.class) {
+            }
+            else if (param.getType() == double.class) {
                 paramList.add(Double.parseDouble(params[i]));
             }
             else if(param.getType() == Integer.class)

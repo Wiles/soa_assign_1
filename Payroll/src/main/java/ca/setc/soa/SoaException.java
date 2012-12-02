@@ -1,5 +1,7 @@
 package ca.setc.soa;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+
 /**
  * An exception for a NOT OK message from the soa
  * or other errors when communicating
@@ -36,8 +38,18 @@ public class SoaException extends Exception {
     public SoaException(Throwable cause)
     {
         super(cause);
-        this.code = RUNTIME_ERROR;
-        this.msg = cause.getMessage();
+        Throwable root = ExceptionUtils.getRootCause(cause);
+        if(root instanceof SoaException)
+        {
+            SoaException soa = (SoaException)root;
+            this.code = soa.getCode();
+            this.msg = cause.getMessage();
+        }
+        else
+        {
+            this.code = RUNTIME_ERROR;
+            this.msg = cause.getMessage();
+        }
     }
 
     /**
