@@ -9,18 +9,48 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Hl7Lib;
+using SoaClient.ui;
 
 namespace SoaClient
 {
+    /// <summary>
+    /// The main form
+    /// </summary>
     public partial class MainForm : Form
     {
+        /// <summary>
+        /// The connection we're connected to. Null if not connected
+        /// </summary>
         private ServiceConnection connection;
+
+        /// <summary>
+        /// The service we're connected to. Null if not connected
+        /// </summary>
         private RemoteService queriedService;
 
+        /// <summary>
+        /// Address of the registry
+        /// </summary>
         private string address;
+
+        /// <summary>
+        /// Port of the registry
+        /// </summary>
         private int port;
+
+        /// <summary>
+        /// Service tag
+        /// </summary>
         private string serviceTag;
+
+        /// <summary>
+        /// Team name of the client
+        /// </summary>
         private string teamName;
+
+        /// <summary>
+        /// Team id of the client
+        /// </summary>
         private int teamId;
 
         public MainForm()
@@ -30,10 +60,13 @@ namespace SoaClient
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            // TODO: Check if client is registered
-
         }
 
+        /// <summary>
+        /// Connect to the registry
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void connectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = new ConnectForm();
@@ -90,11 +123,21 @@ namespace SoaClient
             }
         }
 
+        /// <summary>
+        /// Exit program
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
+        /// <summary>
+        /// Execute the service
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void runToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             try
@@ -204,6 +247,54 @@ namespace SoaClient
             catch (Exception ex)
             {
                 MessageBox.Show("Error executing service, because: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Unregister anything
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void unRegisterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var form = new ConnectForm(false);
+
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    var address = IPAddress.Parse(form.Address);
+                    var port = form.Port;
+                    var teamName = form.TeamName;
+
+                    // unregister
+                    var service = new ServiceConnection(Program.Logger, teamName, address, port);
+                    service.Register();
+
+                    service.UnRegister();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error unregistering, because: " + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Show the about dialog
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var form = new AboutBox();
+                form.Show();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Failure showing about box");
             }
         }
     }

@@ -10,18 +10,44 @@ using System.Windows.Forms;
 
 namespace Hl7Lib
 {
+    /// <summary>
+    /// Connect to the SOA Registry and a service
+    /// </summary>
     public partial class ConnectForm : Form
     {
+        /// <summary>
+        /// Address of the registry
+        /// </summary>
         public string Address;
+
+        /// <summary>
+        /// Service tag
+        /// </summary>
         public string ServiceTag;
+
+        /// <summary>
+        /// Team name
+        /// </summary>
         public string TeamName;
+
+        /// <summary>
+        /// Port of the registry
+        /// </summary>
         public int Port;
 
-        public ConnectForm()
+        /// <summary>
+        /// </summary>
+        public ConnectForm(bool serviceTagEnabled = true)
         {
             InitializeComponent();
+            serviceTag.Enabled = serviceTagEnabled;
         }
 
+        /// <summary>
+        /// Handle ok clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ok_Click(object sender, EventArgs e)
         {
             int portNum = 0;
@@ -29,7 +55,7 @@ namespace Hl7Lib
             {
                 MessageBox.Show("Please enter an address");
             }
-            else if (String.IsNullOrWhiteSpace(serviceTag.Text))
+            else if (serviceTag.Enabled && String.IsNullOrWhiteSpace(serviceTag.Text))
             {
                 MessageBox.Show("Please enter a service tag");
             }
@@ -56,6 +82,11 @@ namespace Hl7Lib
             }
         }
 
+        /// <summary>
+        /// Handle cancel clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;

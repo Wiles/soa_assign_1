@@ -34,6 +34,10 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.runToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unRegisterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.argGrid = new System.Windows.Forms.DataGridView();
             this.ArgName = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -60,7 +64,9 @@
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.runToolStripMenuItem});
+            this.runToolStripMenuItem,
+            this.toolToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
@@ -98,21 +104,51 @@
             this.runToolStripMenuItem1});
             this.runToolStripMenuItem.Name = "runToolStripMenuItem";
             this.runToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
-            this.runToolStripMenuItem.Text = "Run";
+            this.runToolStripMenuItem.Text = "&Run";
             // 
             // runToolStripMenuItem1
             // 
             this.runToolStripMenuItem1.Name = "runToolStripMenuItem1";
             this.runToolStripMenuItem1.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.runToolStripMenuItem1.Size = new System.Drawing.Size(114, 22);
-            this.runToolStripMenuItem1.Text = "Run";
+            this.runToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.runToolStripMenuItem1.Text = "R&un";
             this.runToolStripMenuItem1.Click += new System.EventHandler(this.runToolStripMenuItem1_Click);
+            // 
+            // toolToolStripMenuItem
+            // 
+            this.toolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.unRegisterToolStripMenuItem});
+            this.toolToolStripMenuItem.Name = "toolToolStripMenuItem";
+            this.toolToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.toolToolStripMenuItem.Text = "&Tool";
+            // 
+            // unRegisterToolStripMenuItem
+            // 
+            this.unRegisterToolStripMenuItem.Name = "unRegisterToolStripMenuItem";
+            this.unRegisterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.unRegisterToolStripMenuItem.Text = "&UnRegister";
+            this.unRegisterToolStripMenuItem.Click += new System.EventHandler(this.unRegisterToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "&Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Text = "&About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // splitContainer
             // 
             this.splitContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer.Location = new System.Drawing.Point(0, 24);
-            this.splitContainer.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.splitContainer.Margin = new System.Windows.Forms.Padding(2);
             this.splitContainer.Name = "splitContainer";
             this.splitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -140,7 +176,7 @@
             this.ArgValue});
             this.argGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.argGrid.Location = new System.Drawing.Point(0, 0);
-            this.argGrid.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.argGrid.Margin = new System.Windows.Forms.Padding(2);
             this.argGrid.Name = "argGrid";
             this.argGrid.RowTemplate.Height = 24;
             this.argGrid.Size = new System.Drawing.Size(698, 264);
@@ -178,7 +214,7 @@
             this.RespValue});
             this.respGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.respGrid.Location = new System.Drawing.Point(0, 0);
-            this.respGrid.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.respGrid.Margin = new System.Windows.Forms.Padding(2);
             this.respGrid.Name = "respGrid";
             this.respGrid.ReadOnly = true;
             this.respGrid.RowTemplate.Height = 24;
@@ -228,7 +264,7 @@
             this.Controls.Add(this.splitContainer);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "MainForm";
             this.Text = "Soa #1 - Client";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -267,6 +303,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn ArgValue;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.ToolStripMenuItem toolToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unRegisterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }
 

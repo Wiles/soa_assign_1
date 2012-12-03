@@ -11,23 +11,81 @@ using Shared;
 
 namespace SoaServer
 {
+    /// <summary>
+    /// Service for the purchase totaller
+    /// </summary>
     class PurchaseTotaller : IDisposable
     {
+        /// <summary>
+        /// Constant for argument name
+        /// </summary>
         private const string ProvinceCode = "ProvinceCode";
+
+        /// <summary>
+        /// Constant for argument name
+        /// </summary>
         private const string SubTotal = "SubTotal";
 
+        /// <summary>
+        /// Connection to the registry
+        /// </summary>
         private ServiceConnection registryConnection;
 
+        /// <summary>
+        /// Socket for the listening port
+        /// </summary>
         private readonly Socket socket;
+
+        /// <summary>
+        /// Name of the service
+        /// </summary>
         private readonly string serviceName;
+
+        /// <summary>
+        /// Service tag
+        /// </summary>
         private readonly string tagName;
+
+        /// <summary>
+        /// Team name
+        /// </summary>
         private readonly string teamName;
+
+        /// <summary>
+        /// Registry ip
+        /// </summary>
         private readonly IPAddress registryIp;
+
+        /// <summary>
+        /// Registry port
+        /// </summary>
         private readonly int registryPort;
+
+        /// <summary>
+        /// Service ip
+        /// </summary>
         private readonly IPAddress serviceIp;
+
+        /// <summary>
+        /// Service port
+        /// </summary>
         private readonly int servicePort;
+
+        /// <summary>
+        /// Team id
+        /// </summary>
         private int teamId;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceName">Name of hosted service</param>
+        /// <param name="tagName">Tag of hosted service</param>
+        /// <param name="teamName">Team name of hosted service</param>
+        /// <param name="registryIp">Registry ip</param>
+        /// <param name="registryPort">Registry port</param>
+        /// <param name="serviceIp">Service ip</param>
+        /// <param name="servicePort">Service port</param>
         public PurchaseTotaller(string serviceName, string tagName, string teamName, IPAddress registryIp, int registryPort,
             IPAddress serviceIp, int servicePort)
         {
@@ -43,11 +101,17 @@ namespace SoaServer
             registryConnection = new ServiceConnection(Program.Logger, teamName, registryIp, registryPort);
         }
 
+        /// <summary>
+        /// Dispose the socket
+        /// </summary>
         public void Dispose()
         {
             socket.Dispose();
         }
 
+        /// <summary>
+        /// Register the service with the registry
+        /// </summary>
         public void RegisterService()
         {
             var registerResponse = registryConnection.Register();
@@ -85,6 +149,9 @@ namespace SoaServer
             }
         }
 
+        /// <summary>
+        /// Listen on the port for receiving incoming connections from clients
+        /// </summary>
         public void Listen()
         {
             this.socket.Bind(new IPEndPoint(IPAddress.Any, servicePort));
@@ -97,6 +164,7 @@ namespace SoaServer
             {
                 var connection = this.socket.Accept();
 
+                // Start a new thread for the connection
                 var thread = new Thread((o) =>
                 {
                     var logger = Program.Logger;
