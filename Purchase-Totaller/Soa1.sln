@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2012 for Windows Desktop
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoaClient", "SoaClient.csproj", "{A4C7C5B6-B21A-4E31-BFA2-B72B8692DD71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hl7LibTests", "tests\Hl7LibTests.csproj", "{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hl7Lib", "..\Hl7Lib\Hl7Lib.csproj", "{0DCD503D-456F-408D-BF92-60FED03B9DAB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoaServer", "SoaServer\SoaServer.csproj", "{5D081E1F-4B04-490A-BED6-C1369C4A7C5A}"
@@ -19,10 +17,6 @@ Global
 		{A4C7C5B6-B21A-4E31-BFA2-B72B8692DD71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4C7C5B6-B21A-4E31-BFA2-B72B8692DD71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4C7C5B6-B21A-4E31-BFA2-B72B8692DD71}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49A2E4E6-0F57-42E5-BF13-E004BFACD4B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0DCD503D-456F-408D-BF92-60FED03B9DAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0DCD503D-456F-408D-BF92-60FED03B9DAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DCD503D-456F-408D-BF92-60FED03B9DAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
