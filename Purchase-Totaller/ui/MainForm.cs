@@ -166,48 +166,49 @@ namespace SoaClient
                 {
                     var argName = row.Cells[0].Value.ToString();
                     var argDataType = ServiceArgument.TypeFromString(row.Cells[1].Value.ToString());
-                    var argMandatory = bool.Parse(row.Cells[2].Value.ToString());
+                    var argMandatory = row.Cells[2].Value.ToString().Equals("true", StringComparison.CurrentCultureIgnoreCase);
                     var argValue = row.Cells[3].Value.ToString();
 
-                    try
-                    {
-                        switch (argDataType)
-                        {
-                            case ServiceDataType.Tint:
-                                int.Parse(argValue);
-                                break;
-                            case ServiceDataType.Tdouble:
-                                double.Parse(argValue);
-                                break;
-                            case ServiceDataType.Tfloat:
-                                float.Parse(argValue);
-                                break;
-                            case ServiceDataType.Tchar:
-                                if (argValue.Length > 1)
-                                {
-                                    throw new FormatException("Char field must be 1 character");
-                                }
-                                break;
-                            case ServiceDataType.Tshort:
-                                short.Parse(argValue);
-                                break;
-                            case ServiceDataType.Tlong:
-                                long.Parse(argValue);
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        throw new FormatException("Please enter a proper value for: " + argName);
-                    }
-
-                    if (argMandatory)
+                    // Are we mandatory or do we have a value?
+                    if (argMandatory || !String.IsNullOrWhiteSpace(argValue))
                     {
                         if (String.IsNullOrWhiteSpace(argValue))
                         {
                             throw new FormatException("Please enter a value for: " + argName);
+                        }
+
+                        try
+                        {
+                            switch (argDataType)
+                            {
+                                case ServiceDataType.Tint:
+                                    int.Parse(argValue);
+                                    break;
+                                case ServiceDataType.Tdouble:
+                                    double.Parse(argValue);
+                                    break;
+                                case ServiceDataType.Tfloat:
+                                    float.Parse(argValue);
+                                    break;
+                                case ServiceDataType.Tchar:
+                                    if (argValue.Length > 1)
+                                    {
+                                        throw new FormatException("Char field must be 1 character");
+                                    }
+                                    break;
+                                case ServiceDataType.Tshort:
+                                    short.Parse(argValue);
+                                    break;
+                                case ServiceDataType.Tlong:
+                                    long.Parse(argValue);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            throw new FormatException("Please enter a proper value for: " + argName);
                         }
                     }
 

@@ -36,21 +36,21 @@
             this.runToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.unRegisterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unRegisterConnectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.argGrid = new System.Windows.Forms.DataGridView();
-            this.ArgName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ArgType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ArgMandatory = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ArgValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.respGrid = new System.Windows.Forms.DataGridView();
             this.RespName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RespType = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RespValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.unRegisterConnectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ArgName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArgType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArgMandatory = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ArgValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -131,6 +131,13 @@
             this.unRegisterToolStripMenuItem.Text = "&UnRegister";
             this.unRegisterToolStripMenuItem.Click += new System.EventHandler(this.unRegisterToolStripMenuItem_Click);
             // 
+            // unRegisterConnectedToolStripMenuItem
+            // 
+            this.unRegisterConnectedToolStripMenuItem.Name = "unRegisterConnectedToolStripMenuItem";
+            this.unRegisterConnectedToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.unRegisterConnectedToolStripMenuItem.Text = "UnRegister Connected";
+            this.unRegisterConnectedToolStripMenuItem.Click += new System.EventHandler(this.unRegisterConnectedToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -184,27 +191,6 @@
             this.argGrid.Size = new System.Drawing.Size(698, 264);
             this.argGrid.TabIndex = 0;
             // 
-            // ArgName
-            // 
-            this.ArgName.HeaderText = "Name";
-            this.ArgName.Name = "ArgName";
-            // 
-            // ArgType
-            // 
-            this.ArgType.HeaderText = "Type";
-            this.ArgType.Name = "ArgType";
-            // 
-            // ArgMandatory
-            // 
-            this.ArgMandatory.HeaderText = "Mandatory";
-            this.ArgMandatory.Name = "ArgMandatory";
-            // 
-            // ArgValue
-            // 
-            this.ArgValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.ArgValue.HeaderText = "Value";
-            this.ArgValue.Name = "ArgValue";
-            // 
             // respGrid
             // 
             this.respGrid.AllowUserToAddRows = false;
@@ -257,12 +243,29 @@
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
             this.toolStripStatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
-            // unRegisterConnectedToolStripMenuItem
+            // ArgName
             // 
-            this.unRegisterConnectedToolStripMenuItem.Name = "unRegisterConnectedToolStripMenuItem";
-            this.unRegisterConnectedToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
-            this.unRegisterConnectedToolStripMenuItem.Text = "UnRegister Connected";
-            this.unRegisterConnectedToolStripMenuItem.Click += new System.EventHandler(this.unRegisterConnectedToolStripMenuItem_Click);
+            this.ArgName.HeaderText = "Name";
+            this.ArgName.Name = "ArgName";
+            this.ArgName.ReadOnly = true;
+            // 
+            // ArgType
+            // 
+            this.ArgType.HeaderText = "Type";
+            this.ArgType.Name = "ArgType";
+            this.ArgType.ReadOnly = true;
+            // 
+            // ArgMandatory
+            // 
+            this.ArgMandatory.HeaderText = "Mandatory";
+            this.ArgMandatory.Name = "ArgMandatory";
+            this.ArgMandatory.ReadOnly = true;
+            // 
+            // ArgValue
+            // 
+            this.ArgValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ArgValue.HeaderText = "Value";
+            this.ArgValue.Name = "ArgValue";
             // 
             // MainForm
             // 
@@ -306,10 +309,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn RespName;
         private System.Windows.Forms.DataGridViewTextBoxColumn RespType;
         private System.Windows.Forms.DataGridViewTextBoxColumn RespValue;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ArgName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ArgType;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ArgMandatory;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ArgValue;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         private System.Windows.Forms.ToolStripMenuItem toolToolStripMenuItem;
@@ -317,6 +316,10 @@
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem unRegisterConnectedToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ArgName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ArgType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ArgMandatory;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ArgValue;
     }
 }
 

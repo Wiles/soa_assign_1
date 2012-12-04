@@ -55,13 +55,21 @@ namespace Shared
         /// <param name="message">The message.</param>
         public void Write(string message, int indent = 0)
         {
-            if (mutex.WaitOne())
+            try
             {
-                var writer = new StreamWriter(Path, true);
-                writer.WriteLine(DateTime.Now.ToString() + " " + message);
-                writer.Close();
+                if (mutex.WaitOne())
+                {
+                    var writer = new StreamWriter(Path, true);
+                    writer.WriteLine(DateTime.Now.ToString() + " " + message);
+                    writer.Close();
 
-                mutex.ReleaseMutex();
+                    mutex.ReleaseMutex();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failure to write to log, because " + ex.Message);
+                Console.WriteLine(DateTime.Now.ToString() + " " + message);
             }
         }
 
