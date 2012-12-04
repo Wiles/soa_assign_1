@@ -50,6 +50,7 @@
             this.RespValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.unRegisterConnectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).BeginInit();
             this.splitContainer.Panel1.SuspendLayout();
@@ -110,14 +111,15 @@
             // 
             this.runToolStripMenuItem1.Name = "runToolStripMenuItem1";
             this.runToolStripMenuItem1.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.runToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.runToolStripMenuItem1.Size = new System.Drawing.Size(114, 22);
             this.runToolStripMenuItem1.Text = "R&un";
             this.runToolStripMenuItem1.Click += new System.EventHandler(this.runToolStripMenuItem1_Click);
             // 
             // toolToolStripMenuItem
             // 
             this.toolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.unRegisterToolStripMenuItem});
+            this.unRegisterToolStripMenuItem,
+            this.unRegisterConnectedToolStripMenuItem});
             this.toolToolStripMenuItem.Name = "toolToolStripMenuItem";
             this.toolToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.toolToolStripMenuItem.Text = "&Tool";
@@ -125,7 +127,7 @@
             // unRegisterToolStripMenuItem
             // 
             this.unRegisterToolStripMenuItem.Name = "unRegisterToolStripMenuItem";
-            this.unRegisterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.unRegisterToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.unRegisterToolStripMenuItem.Text = "&UnRegister";
             this.unRegisterToolStripMenuItem.Click += new System.EventHandler(this.unRegisterToolStripMenuItem_Click);
             // 
@@ -140,7 +142,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -255,6 +257,13 @@
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
             this.toolStripStatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
+            // unRegisterConnectedToolStripMenuItem
+            // 
+            this.unRegisterConnectedToolStripMenuItem.Name = "unRegisterConnectedToolStripMenuItem";
+            this.unRegisterConnectedToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.unRegisterConnectedToolStripMenuItem.Text = "UnRegister Connected";
+            this.unRegisterConnectedToolStripMenuItem.Click += new System.EventHandler(this.unRegisterConnectedToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -307,6 +316,7 @@
         private System.Windows.Forms.ToolStripMenuItem unRegisterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unRegisterConnectedToolStripMenuItem;
     }
 }
 

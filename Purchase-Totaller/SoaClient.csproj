@@ -56,6 +56,12 @@
     <Compile Include="ui\ConnectForm.Designer.cs">
       <DependentUpon>ConnectForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ui\UnRegisterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\UnRegisterForm.Designer.cs">
+      <DependentUpon>UnRegisterForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ui\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -79,6 +85,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ui\ConnectForm.resx">
       <DependentUpon>ConnectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\UnRegisterForm.resx">
+      <DependentUpon>UnRegisterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ui\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

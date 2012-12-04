@@ -13,7 +13,7 @@ namespace Hl7Lib
     /// <summary>
     /// Connect to the SOA Registry and a service
     /// </summary>
-    public partial class ConnectForm : Form
+    public partial class UnRegisterForm : Form
     {
         /// <summary>
         /// Address of the registry
@@ -21,9 +21,9 @@ namespace Hl7Lib
         public string Address;
 
         /// <summary>
-        /// Service tag
+        /// Team Id
         /// </summary>
-        public string ServiceTag;
+        public int TeamId;
 
         /// <summary>
         /// Team name
@@ -37,7 +37,7 @@ namespace Hl7Lib
 
         /// <summary>
         /// </summary>
-        public ConnectForm()
+        public UnRegisterForm()
         {
             InitializeComponent();
         }
@@ -49,14 +49,15 @@ namespace Hl7Lib
         /// <param name="e"></param>
         private void ok_Click(object sender, EventArgs e)
         {
+            int teamId = 0;
             int portNum = 0;
             if (String.IsNullOrWhiteSpace(address.Text))
             {
                 MessageBox.Show("Please enter an address");
             }
-            else if (String.IsNullOrWhiteSpace(serviceTag.Text))
+            else if (!int.TryParse(this.teamId.Text, out teamId))
             {
-                MessageBox.Show("Please enter a service tag");
+                MessageBox.Show("Please enter a numeric team id");
             }
             else if (String.IsNullOrWhiteSpace(team.Text))
             {
@@ -73,7 +74,7 @@ namespace Hl7Lib
             else
             {
                 this.Address = address.Text;
-                this.ServiceTag = serviceTag.Text;
+                this.TeamId = teamId;
                 this.Port = portNum;
                 this.TeamName = team.Text;
 

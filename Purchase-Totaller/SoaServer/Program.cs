@@ -13,8 +13,14 @@ namespace SoaServer
 {
     class Program
     {
+        /// <summary>
+        /// Name of logger
+        /// </summary>
         public static string ConfigName = "server";
 
+        /// <summary>
+        /// Server logger
+        /// </summary>
         public static Logger Logger
         {
             get
@@ -23,6 +29,9 @@ namespace SoaServer
             }
         }
 
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
         static void Main(string[] args)
         {
             try
@@ -35,6 +44,7 @@ namespace SoaServer
                 var ip = IPAddress.Any;
                 var port = 0;
 
+                // Load the configuration and check the parameters
                 var appSettings = ConfigurationSettings.AppSettings;
                 try
                 {
@@ -127,17 +137,28 @@ namespace SoaServer
             }
         }
 
+        /// <summary>
+        /// Create and run the background thread that performs checks with the registry to make sure the
+        /// service is registered.
+        /// 
+        /// The checks are performed on the passed in interval.
+        /// </summary>
+        /// <param name="totaller">Totaller to perform registration for</param>
+        /// <param name="checkIntervalMilliseconds">Interval to perform checks at</param>
         private static void RunRegisterThread(PurchaseTotaller totaller, int checkIntervalMilliseconds)
         {
             try
             {
                 var thread = new Thread((o) =>
                 {
-                    var ptotaller = (PurchaseTotaller)o;
+                    while (true)
+                    {
+                        var ptotaller = (PurchaseTotaller)o;
 
-                    ptotaller.RegisterService();
+                        ptotaller.RegisterService();
 
-                    Thread.Sleep(checkIntervalMilliseconds);
+                        Thread.Sleep(checkIntervalMilliseconds); 
+                    }
                 });
 
                 thread.Start(totaller);

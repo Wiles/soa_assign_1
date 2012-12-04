@@ -9,8 +9,14 @@ namespace SoaClient
 {
     static class Program
     {
+        /// <summary>
+        /// Name of logger
+        /// </summary>
         public static string ConfigName = "client";
 
+        /// <summary>
+        /// Logger for the client application
+        /// </summary>
         public static Logger Logger
         {
             get

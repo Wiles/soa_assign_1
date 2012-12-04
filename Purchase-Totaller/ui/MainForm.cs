@@ -142,7 +142,7 @@ namespace SoaClient
         {
             try
             {
-                // Re-register the client every time
+                // Re-register the client every time, incase it's kicked
                 connection.Register();
 
                 var ip = queriedService.Ip;
@@ -259,17 +259,17 @@ namespace SoaClient
         {
             try
             {
-                var form = new ConnectForm(false);
+                var form = new UnRegisterForm();
 
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     var address = IPAddress.Parse(form.Address);
                     var port = form.Port;
                     var teamName = form.TeamName;
+                    var teamId = form.TeamId;
 
                     // unregister
-                    var service = new ServiceConnection(Program.Logger, teamName, address, port);
-                    service.Register();
+                    var service = new ServiceConnection(Program.Logger, teamName, address, port, false, teamId);
 
                     service.UnRegister();
                 }
@@ -295,6 +295,32 @@ namespace SoaClient
             catch (Exception)
             {
                 MessageBox.Show("Failure showing about box");
+            }
+        }
+
+        /// <summary>
+        /// UnRegister from the currently connected session
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void unRegisterConnectedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (connection == null)
+            {
+                MessageBox.Show("Please connect first");
+            }
+            else
+            {
+                try
+                {
+                    // unregister
+                    connection.UnRegister();
+                    MessageBox.Show("Successfully unregistered. Executing a command will have the client re-registered");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }

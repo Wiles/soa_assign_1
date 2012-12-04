@@ -9,10 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hl7Lib", "..\Hl7Lib\Hl7Lib.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoaServer", "SoaServer\SoaServer.csproj", "{5D081E1F-4B04-490A-BED6-C1369C4A7C5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoaServerTests", "SoaServerTests\SoaServerTests.csproj", "{75C1063C-A2CB-42FE-A531-E97CC8DC8989}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoaClientTests", "SoaClientTests\SoaClientTests.csproj", "{1246648A-388F-4368-BF2F-BE6298291F03}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,14 +31,6 @@ Global
 		{5D081E1F-4B04-490A-BED6-C1369C4A7C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D081E1F-4B04-490A-BED6-C1369C4A7C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D081E1F-4B04-490A-BED6-C1369C4A7C5A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75C1063C-A2CB-42FE-A531-E97CC8DC8989}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75C1063C-A2CB-42FE-A531-E97CC8DC8989}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75C1063C-A2CB-42FE-A531-E97CC8DC8989}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75C1063C-A2CB-42FE-A531-E97CC8DC8989}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1246648A-388F-4368-BF2F-BE6298291F03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1246648A-388F-4368-BF2F-BE6298291F03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1246648A-388F-4368-BF2F-BE6298291F03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1246648A-388F-4368-BF2F-BE6298291F03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
